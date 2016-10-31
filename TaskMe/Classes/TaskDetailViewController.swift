@@ -1,5 +1,5 @@
 //
-//  DetailViewController.swift
+//  TaskDetailViewController.swift
 //  TaskMe
 //
 //  Created by Matthew Laird on 10/26/16.
@@ -8,16 +8,16 @@
 
 import UIKit
 
-class DetailViewController: UIViewController {
+class TaskDetailViewController: UIViewController {
 
-    @IBOutlet weak var detailDescriptionLabel: UILabel!
-
+    @IBOutlet weak var titleTextField: UITextField!
+    @IBOutlet weak var completedSwitch: UISwitch!
 
     func configureView() {
         // Update the user interface for the detail item.
         if let detail = self.detailItem {
-            if let label = self.detailDescriptionLabel {
-                label.text = detail.timestamp!.description
+            if let textField = self.titleTextField {
+                textField.text = detail.title!.description
             }
         }
     }
@@ -33,13 +33,12 @@ class DetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    var detailItem: Event? {
+    var detailItem: Task? {
         didSet {
             // Update the view.
             self.configureView()
         }
     }
-
 
 }
 
