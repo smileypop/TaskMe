@@ -16,6 +16,6 @@ extension Project {
         return NSFetchRequest<Project>(entityName: "Project");
     }
 
-    @NSManaged public var name: String?
+    @NSManaged public var title: String?
 
 }

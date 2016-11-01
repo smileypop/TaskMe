@@ -4,13 +4,15 @@
 //  Created by Grigory Avdyushin on 30.06.16.
 //  Copyright © 2016 Grigory Avdyushin. All rights reserved.
 //
+//  Code changes by Matthew Laird on 10/31/16.
+//  Copyright © 2016 Matthew Laird. All rights reserved.
 
 import UIKit
 import CoreData
 
 /// NSPersistentStoreCoordinator extension
 extension NSPersistentStoreCoordinator {
-    
+
     /// NSPersistentStoreCoordinator error types
     public enum CoordinatorError: Error {
         /// .momd file not found
@@ -20,24 +22,24 @@ extension NSPersistentStoreCoordinator {
         /// Gettings document directory fail
         case storePathNotFound
     }
-    
+
     /// Return NSPersistentStoreCoordinator object
     static func coordinator(name: String) throws -> NSPersistentStoreCoordinator? {
-        
+
         guard let modelURL = Bundle.main.url(forResource: name, withExtension: "momd") else {
             throw CoordinatorError.modelFileNotFound
         }
-        
+
         guard let model = NSManagedObjectModel(contentsOf: modelURL) else {
             throw CoordinatorError.modelCreationError
         }
-        
+
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
-        
+
         guard let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last else {
             throw CoordinatorError.storePathNotFound
         }
-        
+
         do {
             let url = documents.appendingPathComponent("\(name).sqlite")
             let options = [ NSMigratePersistentStoresAutomaticallyOption : true,
@@ -46,18 +48,20 @@ extension NSPersistentStoreCoordinator {
         } catch {
             throw error
         }
-        
+
         return coordinator
     }
 }
 
 struct Storage {
-    
+
     static var shared = Storage()
-    
+
+    private static let modelName:String = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
+
     @available(iOS 10.0, *)
     private lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "Model")
+        let container = NSPersistentContainer(name: modelName)
         container.loadPersistentStores { (storeDescription, error) in
             print("CoreData: Inited \(storeDescription)")
             guard error == nil else {
@@ -67,10 +71,10 @@ struct Storage {
         }
         return container
     }()
-    
+
     private lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
         do {
-            return try NSPersistentStoreCoordinator.coordinator(name: "Model")
+            return try NSPersistentStoreCoordinator.coordinator(name: modelName)
         } catch {
             print("CoreData: Unresolved error \(error)")
         }
@@ -85,11 +89,20 @@ struct Storage {
     }()
 
     // MARK: Public methods
-    
+
+    enum EntityType: String {
+        case project = "Project"
+        case task = "Task"
+
+        var classType: AnyClass {
+            return NSClassFromString(self.rawValue)!
+        }
+    }
+
     enum SaveStatus {
         case saved, rolledBack, hasNoChanges
     }
-    
+
     var context: NSManagedObjectContext {
         mutating get {
             if #available(iOS 10.0, *) {
@@ -99,7 +112,7 @@ struct Storage {
             }
         }
     }
-    
+
     mutating func save() -> SaveStatus {
         if context.hasChanges {
             do {
@@ -111,6 +124,13 @@ struct Storage {
             }
         }
         return .hasNoChanges
+    }
+
+    // create a new entity
+    mutating func createEntity(entityName: String) -> NSManagedObject {
+
+        return NSManagedObject(entity: NSEntityDescription.entity(forEntityName: entityName, in: context)!, insertInto: context)
+        
     }
     
 }

@@ -6,4 +6,10 @@
 //  Copyright © 2016 Matthew Laird. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+class TaskTableViewCell: UITableViewCell {
+
+    @IBOutlet weak var deadlineLabel: UILabel!
+    @IBOutlet weak var completedSwitch: UISwitch!
+}

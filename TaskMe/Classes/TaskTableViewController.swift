@@ -9,43 +9,69 @@
 import UIKit
 import CoreData
 
-class TaskTableViewController: UITableViewController {
+// custom date formatter
+extension Date {
+    func toString(format: String) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        return formatter.string(from: self)
+    }
+}
 
-    // MARK: - Table view data source
+class TaskTableViewController: TableViewController {
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view, typically from a nib.
+
+        // set the object type
+        self.objectType = ObjectType.task
+
+        // set the sort descripter
+        self.sortDescriptor = ObjectAttributes.title
+
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
-    }
-
+    // MARK: - Table View
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 
-        // Set appropriate labels for the cells.
-        if (indexPath as NSIndexPath).row == 0 {
-            cell.textLabel?.text = "Fake 1"
-        }
-        else {
-            cell.textLabel?.text = "Fake 2"
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! TaskTableViewCell
+        let object = self.fetchedResultsController.object(at: indexPath)
+        self.configureCell(cell, withObject: object)
 
         return cell
     }
 
+    override func configureCell(_ cell: UITableViewCell, withObject object: Any) {
 
-    // MARK: - Navigation
+        if let task = object as? Task {
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            let taskCell = cell as! TaskTableViewCell
 
-            let controller = (segue.destination as! UINavigationController).topViewController as! TaskDetailViewController
-            controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem
-            controller.navigationItem.leftItemsSupplementBackButton = true
-            controller.view.backgroundColor = UIColor.purple
+            taskCell.textLabel!.text = task.title
+            taskCell.deadlineLabel!.text = (task.deadline as! Date).toString(format: "yyyy-MM-dd")
+            taskCell.completedSwitch!.isOn = task.isComplete
+        }
+    }
+
+    // MARK: - Detail View
+
+    override func showDetailView(mode: String, object: NSManagedObject? = nil)
+    {
+        let modalViewController: TaskDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "TaskDetail") as! TaskDetailViewController
+
+        // we have to set mode this way to prevent compiler error : segmentation error 11
+        modalViewController.viewMode = DetailViewController.ViewMode(rawValue: mode)!
+        modalViewController.objectType = .task
+        modalViewController.targetObject = object
+
+        let navigationController = UINavigationController(rootViewController: modalViewController)
+        navigationController.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
         
+        self.present(navigationController, animated: true, completion: {
+            
+        })
     }
     
 }

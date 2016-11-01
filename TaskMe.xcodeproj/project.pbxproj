@@ -7,25 +7,43 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		931FEAAB1DC07109001BB2C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931FEAAA1DC07109001BB2C4 /* AppDelegate.swift */; };
 		931FEAAE1DC07109001BB2C4 /* TaskMe.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 931FEAAC1DC07109001BB2C4 /* TaskMe.xcdatamodeld */; };
-		931FEAB01DC07109001BB2C4 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931FEAAF1DC07109001BB2C4 /* MasterViewController.swift */; };
-		931FEAB21DC07109001BB2C4 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931FEAB11DC07109001BB2C4 /* DetailViewController.swift */; };
 		931FEAB51DC07109001BB2C4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 931FEAB31DC07109001BB2C4 /* Main.storyboard */; };
 		931FEAB71DC07109001BB2C4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 931FEAB61DC07109001BB2C4 /* Assets.xcassets */; };
 		931FEABA1DC07109001BB2C4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 931FEAB81DC07109001BB2C4 /* LaunchScreen.storyboard */; };
+		935550F21DC1CA8A00423037 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935550ED1DC1CA8A00423037 /* AppDelegate.swift */; };
+		935550F31DC1CA8A00423037 /* ProjectTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935550EE1DC1CA8A00423037 /* ProjectTableViewCell.swift */; };
+		935550F41DC1CA8A00423037 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935550EF1DC1CA8A00423037 /* TableViewController.swift */; };
+		935550F51DC1CA8A00423037 /* TaskDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935550F01DC1CA8A00423037 /* TaskDetailViewController.swift */; };
+		935550F61DC1CA8A00423037 /* TaskTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935550F11DC1CA8A00423037 /* TaskTableViewController.swift */; };
+		935550F81DC1CB7F00423037 /* TaskTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935550F71DC1CB7F00423037 /* TaskTableViewCell.swift */; };
+		935550FA1DC308C300423037 /* ProjectDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935550F91DC308C300423037 /* ProjectDetailViewController.swift */; };
+		93D7E6B31DC43FD3008BAEF8 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7E6B21DC43FD3008BAEF8 /* Storage.swift */; };
+		93D7E6D81DC70F6B008BAEF8 /* ProjectTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7E6D71DC70F6B008BAEF8 /* ProjectTableViewController.swift */; };
+		93D7E6DA1DC722A8008BAEF8 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7E6D91DC722A8008BAEF8 /* DetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		931FEAA71DC07109001BB2C4 /* TaskMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaskMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		931FEAAA1DC07109001BB2C4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		931FEAAD1DC07109001BB2C4 /* TaskMe.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TaskMe.xcdatamodel; sourceTree = "<group>"; };
-		931FEAAF1DC07109001BB2C4 /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
-		931FEAB11DC07109001BB2C4 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		931FEAB41DC07109001BB2C4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		931FEAB61DC07109001BB2C4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		931FEAB91DC07109001BB2C4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		931FEABB1DC07109001BB2C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		931FEAFC1DC08FE0001BB2C4 /* Project+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Project+CoreDataClass.swift"; sourceTree = "<group>"; };
+		931FEAFD1DC08FE0001BB2C4 /* Project+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Project+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		931FEAFE1DC08FE0001BB2C4 /* Task+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataClass.swift"; sourceTree = "<group>"; };
+		931FEAFF1DC08FE0001BB2C4 /* Task+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		935550ED1DC1CA8A00423037 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		935550EE1DC1CA8A00423037 /* ProjectTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectTableViewCell.swift; sourceTree = "<group>"; };
+		935550EF1DC1CA8A00423037 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
+		935550F01DC1CA8A00423037 /* TaskDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskDetailViewController.swift; sourceTree = "<group>"; };
+		935550F11DC1CA8A00423037 /* TaskTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskTableViewController.swift; sourceTree = "<group>"; };
+		935550F71DC1CB7F00423037 /* TaskTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskTableViewCell.swift; sourceTree = "<group>"; };
+		935550F91DC308C300423037 /* ProjectDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewController.swift; sourceTree = "<group>"; };
+		93D7E6B21DC43FD3008BAEF8 /* Storage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
+		93D7E6D71DC70F6B008BAEF8 /* ProjectTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectTableViewController.swift; sourceTree = "<group>"; };
+		93D7E6D91DC722A8008BAEF8 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,9 +76,8 @@
 		931FEAA91DC07109001BB2C4 /* TaskMe */ = {
 			isa = PBXGroup;
 			children = (
-				931FEAAA1DC07109001BB2C4 /* AppDelegate.swift */,
-				931FEAAF1DC07109001BB2C4 /* MasterViewController.swift */,
-				931FEAB11DC07109001BB2C4 /* DetailViewController.swift */,
+				935550EC1DC1CA8A00423037 /* Classes */,
+				931FEAFB1DC08FE0001BB2C4 /* DataModels */,
 				931FEAB31DC07109001BB2C4 /* Main.storyboard */,
 				931FEAB61DC07109001BB2C4 /* Assets.xcassets */,
 				931FEAB81DC07109001BB2C4 /* LaunchScreen.storyboard */,
@@ -69,6 +86,35 @@
 			);
 			path = TaskMe;
 			sourceTree = "<group>";
+		};
+		931FEAFB1DC08FE0001BB2C4 /* DataModels */ = {
+			isa = PBXGroup;
+			children = (
+				931FEAFC1DC08FE0001BB2C4 /* Project+CoreDataClass.swift */,
+				931FEAFD1DC08FE0001BB2C4 /* Project+CoreDataProperties.swift */,
+				931FEAFE1DC08FE0001BB2C4 /* Task+CoreDataClass.swift */,
+				931FEAFF1DC08FE0001BB2C4 /* Task+CoreDataProperties.swift */,
+			);
+			path = DataModels;
+			sourceTree = "<group>";
+		};
+		935550EC1DC1CA8A00423037 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				935550ED1DC1CA8A00423037 /* AppDelegate.swift */,
+				93D7E6B21DC43FD3008BAEF8 /* Storage.swift */,
+				935550EF1DC1CA8A00423037 /* TableViewController.swift */,
+				93D7E6D91DC722A8008BAEF8 /* DetailViewController.swift */,
+				93D7E6D71DC70F6B008BAEF8 /* ProjectTableViewController.swift */,
+				935550EE1DC1CA8A00423037 /* ProjectTableViewCell.swift */,
+				935550F91DC308C300423037 /* ProjectDetailViewController.swift */,
+				935550F11DC1CA8A00423037 /* TaskTableViewController.swift */,
+				935550F71DC1CB7F00423037 /* TaskTableViewCell.swift */,
+				935550F01DC1CA8A00423037 /* TaskDetailViewController.swift */,
+			);
+			name = Classes;
+			path = TaskMe/Classes;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -97,7 +143,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0800;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = "Matthew Laird";
 				TargetAttributes = {
 					931FEAA61DC07109001BB2C4 = {
@@ -143,10 +189,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93D7E6DA1DC722A8008BAEF8 /* DetailViewController.swift in Sources */,
 				931FEAAE1DC07109001BB2C4 /* TaskMe.xcdatamodeld in Sources */,
-				931FEAAB1DC07109001BB2C4 /* AppDelegate.swift in Sources */,
-				931FEAB01DC07109001BB2C4 /* MasterViewController.swift in Sources */,
-				931FEAB21DC07109001BB2C4 /* DetailViewController.swift in Sources */,
+				93D7E6B31DC43FD3008BAEF8 /* Storage.swift in Sources */,
+				935550F61DC1CA8A00423037 /* TaskTableViewController.swift in Sources */,
+				935550F81DC1CB7F00423037 /* TaskTableViewCell.swift in Sources */,
+				935550F21DC1CA8A00423037 /* AppDelegate.swift in Sources */,
+				935550FA1DC308C300423037 /* ProjectDetailViewController.swift in Sources */,
+				93D7E6D81DC70F6B008BAEF8 /* ProjectTableViewController.swift in Sources */,
+				935550F31DC1CA8A00423037 /* ProjectTableViewCell.swift in Sources */,
+				935550F51DC1CA8A00423037 /* TaskDetailViewController.swift in Sources */,
+				935550F41DC1CA8A00423037 /* TableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,6 +243,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -240,6 +294,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -271,7 +326,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = P922UGYKH4;
 				INFOPLIST_FILE = TaskMe/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.matthewlaird.TaskMe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
@@ -284,7 +341,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = P922UGYKH4;
 				INFOPLIST_FILE = TaskMe/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.matthewlaird.TaskMe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
@@ -310,6 +369,7 @@
 				931FEAC01DC07109001BB2C4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

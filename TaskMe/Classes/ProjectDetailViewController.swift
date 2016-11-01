@@ -8,37 +8,44 @@
 
 import UIKit
 
-class ProjectDetailViewController : UIViewController {
+class ProjectDetailViewController : DetailViewController {
 
-    enum Mode: String {
-        case Edit = "Edit Project"
-        case Add = "Add Project"
+    override func setup() {
+
+        if let object:Project = self.targetObject as? Project {
+                self.titleTextField.text = object.title
+        }
+
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+    // MARK: Objects
 
-        let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelEdit(_:)))
-        self.navigationItem.leftBarButtonItem = cancelButton
+    override func addObject() {
 
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doEdit(_:)))
-        self.navigationItem.rightBarButtonItem = doneButton
+        if let object:Project = Storage.shared.createEntity(entityName: objectType.rawValue) as? Project {
+
+            setValues(for: object)
+        }
+
+        dismissSelf()
     }
 
-    func setMode(_ mode:Mode, _ callback: () -> Void) {
+    override func updateObject() {
 
-        self.navigationItem.title = mode.rawValue
+        if let object = self.targetObject as? Project {
+
+            setValues(for: object)
+        }
+
+        dismissSelf()
     }
 
-    func cancelEdit(_ sender: Any) {
+    func setValues(for object: Project)
+    {
+        object.title = self.objectTitle
 
-        self.dismiss(animated: true, completion: nil)
-    }
-
-    func doEdit(_ sender: Any) {
-
-        self.dismiss(animated: true, completion: nil)
+        Storage.shared.save()
+        
     }
     
 }

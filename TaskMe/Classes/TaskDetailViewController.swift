@@ -8,37 +8,56 @@
 
 import UIKit
 
-class TaskDetailViewController: UIViewController {
+class TaskDetailViewController: DetailViewController {
 
-    @IBOutlet weak var titleTextField: UITextField!
-    @IBOutlet weak var completedSwitch: UISwitch!
+    @IBOutlet weak var deadlineDatePicker: UIDatePicker!
 
-    func configureView() {
-        // Update the user interface for the detail item.
-        if let detail = self.detailItem {
-            if let textField = self.titleTextField {
-                textField.text = detail.title!.description
-            }
+    override func setup() {
+
+        if let object:Task = self.targetObject as? Task {
+
+            self.titleTextField.text = object.title
+
+            self.deadlineDatePicker.date = object.deadline as! Date
+
+        } else {
+
+            // set the minimum date to today
+            self.deadlineDatePicker.minimumDate = Date()
         }
+
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        self.configureView()
-    }
+    // MARK: Objects
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+    override func addObject() {
 
-    var detailItem: Task? {
-        didSet {
-            // Update the view.
-            self.configureView()
+        if let object:Task = Storage.shared.createEntity(entityName: self.objectType.rawValue) as? Task {
+
+            setValues(for: object)
         }
+
+        dismissSelf()
+    }
+
+    override func updateObject() {
+
+        if let object = self.targetObject as? Task {
+
+            setValues(for: object)
+        }
+        
+        dismissSelf()
+    }
+
+    func setValues(for object: Task)
+    {
+        object.title = self.objectTitle
+
+        object.deadline = self.deadlineDatePicker.date as NSDate
+
+        Storage.shared.save()
+
     }
 
 }
-
