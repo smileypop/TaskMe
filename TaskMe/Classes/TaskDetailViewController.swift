@@ -7,18 +7,21 @@
 //
 
 import UIKit
+import RealmSwift
 
 class TaskDetailViewController: DetailViewController {
 
     @IBOutlet weak var deadlineDatePicker: UIDatePicker!
 
+    var project:Project!
+
     override func setup() {
 
         if let object:Task = self.targetObject as? Task {
 
-            self.titleTextField.text = object.title
+            self.nameTextField.text = object.name
 
-            self.deadlineDatePicker.date = object.deadline as! Date
+            self.deadlineDatePicker.date = object.deadline as Date
 
         } else {
 
@@ -32,10 +35,21 @@ class TaskDetailViewController: DetailViewController {
 
     override func addObject() {
 
-        if let object:Task = Storage.shared.createEntity(entityName: self.objectType.rawValue) as? Task {
+//        if let object:Task = Storage.shared.createEntity(entityName: self.objectType.rawValue) as? Task {
+//
+//            setValues(for: object)
+//        }
 
-            setValues(for: object)
-        }
+        let object = Task()
+
+        object.id = Models.getIdForNewObject(self.objectType)
+
+        object.project_id = self.project.id
+
+        // add this taks to the project tasks
+        Storage.shared.append(object, self.project.tasks)
+
+        setValues(for: object)
 
         dismissSelf()
     }
@@ -52,11 +66,16 @@ class TaskDetailViewController: DetailViewController {
 
     func setValues(for object: Task)
     {
-        object.title = self.objectTitle
+        //object.name = self.objectName
 
-        object.deadline = self.deadlineDatePicker.date as NSDate
+        //object.deadline = self.deadlineDatePicker.date as NSDate
 
-        Storage.shared.save()
+        Storage.shared.add(object, [
+            "name" : self.objectName,
+            "deadline" : self.deadlineDatePicker.date as NSDate
+            ])
+
+        //Storage.shared.save()
 
     }
 

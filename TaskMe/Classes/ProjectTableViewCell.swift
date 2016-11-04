@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ProjectTableViewCell: UITableViewCell {
+class ProjectTableViewCell: TableViewCell {
 
     @IBOutlet weak var completedTasksLabel: UILabel!
 }

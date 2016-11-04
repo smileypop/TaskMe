@@ -7,10 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		931FEAAE1DC07109001BB2C4 /* TaskMe.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 931FEAAC1DC07109001BB2C4 /* TaskMe.xcdatamodeld */; };
+		930582FA1DC94779003C56C1 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930582F91DC94779003C56C1 /* TableViewCell.swift */; };
+		930F79FA1DC9FAED00557565 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 930F79F81DC9FAED00557565 /* Realm.framework */; };
+		930F79FB1DC9FAED00557565 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 930F79F91DC9FAED00557565 /* RealmSwift.framework */; };
+		930F79FC1DC9FAF500557565 /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 930F79F81DC9FAED00557565 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		930F79FD1DC9FAF500557565 /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 930F79F91DC9FAED00557565 /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		931FEAB51DC07109001BB2C4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 931FEAB31DC07109001BB2C4 /* Main.storyboard */; };
 		931FEAB71DC07109001BB2C4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 931FEAB61DC07109001BB2C4 /* Assets.xcassets */; };
 		931FEABA1DC07109001BB2C4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 931FEAB81DC07109001BB2C4 /* LaunchScreen.storyboard */; };
+		9348F7061DCB0ABA00411453 /* DataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9348F7041DCB0ABA00411453 /* DataModels.swift */; };
+		9348F7071DCB0ABA00411453 /* DataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9348F7051DCB0ABA00411453 /* DataStorage.swift */; };
+		9348F7091DCB0B7F00411453 /* Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9348F7081DCB0B7F00411453 /* Custom.swift */; };
 		935550F21DC1CA8A00423037 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935550ED1DC1CA8A00423037 /* AppDelegate.swift */; };
 		935550F31DC1CA8A00423037 /* ProjectTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935550EE1DC1CA8A00423037 /* ProjectTableViewCell.swift */; };
 		935550F41DC1CA8A00423037 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935550EF1DC1CA8A00423037 /* TableViewController.swift */; };
@@ -18,22 +25,37 @@
 		935550F61DC1CA8A00423037 /* TaskTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935550F11DC1CA8A00423037 /* TaskTableViewController.swift */; };
 		935550F81DC1CB7F00423037 /* TaskTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935550F71DC1CB7F00423037 /* TaskTableViewCell.swift */; };
 		935550FA1DC308C300423037 /* ProjectDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935550F91DC308C300423037 /* ProjectDetailViewController.swift */; };
-		93D7E6B31DC43FD3008BAEF8 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7E6B21DC43FD3008BAEF8 /* Storage.swift */; };
 		93D7E6D81DC70F6B008BAEF8 /* ProjectTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7E6D71DC70F6B008BAEF8 /* ProjectTableViewController.swift */; };
 		93D7E6DA1DC722A8008BAEF8 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7E6D91DC722A8008BAEF8 /* DetailViewController.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		930F79ED1DC9AF6F00557565 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				930F79FC1DC9FAF500557565 /* Realm.framework in Embed Frameworks */,
+				930F79FD1DC9FAF500557565 /* RealmSwift.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		930582F91DC94779003C56C1 /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		930F79F81DC9FAED00557565 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
+		930F79F91DC9FAED00557565 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
 		931FEAA71DC07109001BB2C4 /* TaskMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaskMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		931FEAAD1DC07109001BB2C4 /* TaskMe.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TaskMe.xcdatamodel; sourceTree = "<group>"; };
 		931FEAB41DC07109001BB2C4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		931FEAB61DC07109001BB2C4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		931FEAB91DC07109001BB2C4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		931FEABB1DC07109001BB2C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		931FEAFC1DC08FE0001BB2C4 /* Project+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Project+CoreDataClass.swift"; sourceTree = "<group>"; };
-		931FEAFD1DC08FE0001BB2C4 /* Project+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Project+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		931FEAFE1DC08FE0001BB2C4 /* Task+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataClass.swift"; sourceTree = "<group>"; };
-		931FEAFF1DC08FE0001BB2C4 /* Task+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		9348F7041DCB0ABA00411453 /* DataModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataModels.swift; path = Data/DataModels.swift; sourceTree = "<group>"; };
+		9348F7051DCB0ABA00411453 /* DataStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataStorage.swift; path = Data/DataStorage.swift; sourceTree = "<group>"; };
+		9348F7081DCB0B7F00411453 /* Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Custom.swift; sourceTree = "<group>"; };
 		935550ED1DC1CA8A00423037 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		935550EE1DC1CA8A00423037 /* ProjectTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectTableViewCell.swift; sourceTree = "<group>"; };
 		935550EF1DC1CA8A00423037 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
@@ -41,7 +63,6 @@
 		935550F11DC1CA8A00423037 /* TaskTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskTableViewController.swift; sourceTree = "<group>"; };
 		935550F71DC1CB7F00423037 /* TaskTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskTableViewCell.swift; sourceTree = "<group>"; };
 		935550F91DC308C300423037 /* ProjectDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewController.swift; sourceTree = "<group>"; };
-		93D7E6B21DC43FD3008BAEF8 /* Storage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		93D7E6D71DC70F6B008BAEF8 /* ProjectTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectTableViewController.swift; sourceTree = "<group>"; };
 		93D7E6D91DC722A8008BAEF8 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -51,12 +72,23 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				930F79FB1DC9FAED00557565 /* RealmSwift.framework in Frameworks */,
+				930F79FA1DC9FAED00557565 /* Realm.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		930F79F71DC9FAED00557565 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				930F79F81DC9FAED00557565 /* Realm.framework */,
+				930F79F91DC9FAED00557565 /* RealmSwift.framework */,
+			);
+			path = Frameworks;
+			sourceTree = "<group>";
+		};
 		931FEA9E1DC07109001BB2C4 = {
 			isa = PBXGroup;
 			children = (
@@ -77,24 +109,23 @@
 			isa = PBXGroup;
 			children = (
 				935550EC1DC1CA8A00423037 /* Classes */,
-				931FEAFB1DC08FE0001BB2C4 /* DataModels */,
+				931FEAFB1DC08FE0001BB2C4 /* Data */,
+				9348F7041DCB0ABA00411453 /* DataModels.swift */,
+				9348F7051DCB0ABA00411453 /* DataStorage.swift */,
+				930F79F71DC9FAED00557565 /* Frameworks */,
 				931FEAB31DC07109001BB2C4 /* Main.storyboard */,
 				931FEAB61DC07109001BB2C4 /* Assets.xcassets */,
 				931FEAB81DC07109001BB2C4 /* LaunchScreen.storyboard */,
 				931FEABB1DC07109001BB2C4 /* Info.plist */,
-				931FEAAC1DC07109001BB2C4 /* TaskMe.xcdatamodeld */,
 			);
 			path = TaskMe;
 			sourceTree = "<group>";
 		};
-		931FEAFB1DC08FE0001BB2C4 /* DataModels */ = {
+		931FEAFB1DC08FE0001BB2C4 /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				931FEAFC1DC08FE0001BB2C4 /* Project+CoreDataClass.swift */,
-				931FEAFD1DC08FE0001BB2C4 /* Project+CoreDataProperties.swift */,
-				931FEAFE1DC08FE0001BB2C4 /* Task+CoreDataClass.swift */,
-				931FEAFF1DC08FE0001BB2C4 /* Task+CoreDataProperties.swift */,
 			);
+			name = Data;
 			path = DataModels;
 			sourceTree = "<group>";
 		};
@@ -102,7 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				935550ED1DC1CA8A00423037 /* AppDelegate.swift */,
-				93D7E6B21DC43FD3008BAEF8 /* Storage.swift */,
+				9348F7081DCB0B7F00411453 /* Custom.swift */,
 				935550EF1DC1CA8A00423037 /* TableViewController.swift */,
 				93D7E6D91DC722A8008BAEF8 /* DetailViewController.swift */,
 				93D7E6D71DC70F6B008BAEF8 /* ProjectTableViewController.swift */,
@@ -111,6 +142,7 @@
 				935550F11DC1CA8A00423037 /* TaskTableViewController.swift */,
 				935550F71DC1CB7F00423037 /* TaskTableViewCell.swift */,
 				935550F01DC1CA8A00423037 /* TaskDetailViewController.swift */,
+				930582F91DC94779003C56C1 /* TableViewCell.swift */,
 			);
 			name = Classes;
 			path = TaskMe/Classes;
@@ -126,6 +158,8 @@
 				931FEAA31DC07109001BB2C4 /* Sources */,
 				931FEAA41DC07109001BB2C4 /* Frameworks */,
 				931FEAA51DC07109001BB2C4 /* Resources */,
+				930F79ED1DC9AF6F00557565 /* Embed Frameworks */,
+				930F79D61DC9ADC900557565 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -184,20 +218,38 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		930F79D61DC9ADC900557565 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework/strip-frameworks.sh\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		931FEAA31DC07109001BB2C4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				93D7E6DA1DC722A8008BAEF8 /* DetailViewController.swift in Sources */,
-				931FEAAE1DC07109001BB2C4 /* TaskMe.xcdatamodeld in Sources */,
-				93D7E6B31DC43FD3008BAEF8 /* Storage.swift in Sources */,
 				935550F61DC1CA8A00423037 /* TaskTableViewController.swift in Sources */,
 				935550F81DC1CB7F00423037 /* TaskTableViewCell.swift in Sources */,
+				9348F7091DCB0B7F00411453 /* Custom.swift in Sources */,
 				935550F21DC1CA8A00423037 /* AppDelegate.swift in Sources */,
 				935550FA1DC308C300423037 /* ProjectDetailViewController.swift in Sources */,
 				93D7E6D81DC70F6B008BAEF8 /* ProjectTableViewController.swift in Sources */,
 				935550F31DC1CA8A00423037 /* ProjectTableViewCell.swift in Sources */,
+				930582FA1DC94779003C56C1 /* TableViewCell.swift in Sources */,
+				9348F7071DCB0ABA00411453 /* DataStorage.swift in Sources */,
+				9348F7061DCB0ABA00411453 /* DataModels.swift in Sources */,
 				935550F51DC1CA8A00423037 /* TaskDetailViewController.swift in Sources */,
 				935550F41DC1CA8A00423037 /* TableViewController.swift in Sources */,
 			);
@@ -252,6 +304,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -303,6 +356,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -325,6 +379,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = P922UGYKH4;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/TaskMe/DataModels/Frameworks",
+					"$(PROJECT_DIR)/TaskMe/Frameworks",
+				);
 				INFOPLIST_FILE = TaskMe/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -340,6 +400,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = P922UGYKH4;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/TaskMe/DataModels/Frameworks",
+					"$(PROJECT_DIR)/TaskMe/Frameworks",
+				);
 				INFOPLIST_FILE = TaskMe/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -372,19 +438,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		931FEAAC1DC07109001BB2C4 /* TaskMe.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				931FEAAD1DC07109001BB2C4 /* TaskMe.xcdatamodel */,
-			);
-			currentVersion = 931FEAAD1DC07109001BB2C4 /* TaskMe.xcdatamodel */;
-			path = TaskMe.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 931FEA9F1DC07109001BB2C4 /* Project object */;
 }

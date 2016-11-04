@@ -7,13 +7,14 @@
 //
 
 import UIKit
+import RealmSwift
 
 class ProjectDetailViewController : DetailViewController {
 
     override func setup() {
 
         if let object:Project = self.targetObject as? Project {
-                self.titleTextField.text = object.title
+                self.nameTextField.text = object.name
         }
 
     }
@@ -22,10 +23,11 @@ class ProjectDetailViewController : DetailViewController {
 
     override func addObject() {
 
-        if let object:Project = Storage.shared.createEntity(entityName: objectType.rawValue) as? Project {
+        let object = Project()
 
-            setValues(for: object)
-        }
+        object.id = Models.getIdForNewObject(self.objectType)
+
+        setValues(for: object)
 
         dismissSelf()
     }
@@ -42,9 +44,11 @@ class ProjectDetailViewController : DetailViewController {
 
     func setValues(for object: Project)
     {
-        object.title = self.objectTitle
 
-        Storage.shared.save()
+
+        Storage.shared.add(object, [
+            "name" : self.objectName
+            ])
         
     }
     

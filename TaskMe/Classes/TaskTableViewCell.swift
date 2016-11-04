@@ -12,4 +12,24 @@ class TaskTableViewCell: UITableViewCell {
 
     @IBOutlet weak var deadlineLabel: UILabel!
     @IBOutlet weak var completedSwitch: UISwitch!
+
+    var task:Task? = nil
+
+    @IBAction func onCompletedSwitchToggle(sender: UISwitch)
+    {
+        print("onCompletedSwitchToggle")
+
+        if let object = task {
+
+            print("task completed changed")
+
+            Storage.shared.add(object, ["completed" : sender.isOn])
+
+        }
+    }
+
+    deinit
+    {
+        task = nil
+    }
 }

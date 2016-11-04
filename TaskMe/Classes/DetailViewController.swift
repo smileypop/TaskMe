@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 class DetailViewController : UIViewController {
 
@@ -19,14 +20,14 @@ class DetailViewController : UIViewController {
 
     // MARK: - Instance variables
 
-    @IBOutlet weak var titleTextField: UITextField!
+    @IBOutlet weak var nameTextField: UITextField!
 
     var viewMode:ViewMode!
-    var targetObject: AnyObject?
-    var objectType:TableViewController.ObjectType!
+    var objectType:ObjectType!
+    var targetObject: Object?
 
-    lazy var objectTitle: String = { [weak self] in
-        (self?.titleTextField.text!.isEmpty)! ? "My " + (self?.objectType.rawValue)!  : (self?.titleTextField.text!)!
+    lazy var objectName: String = { [weak self] in
+        (self?.nameTextField.text!.isEmpty)! ? "My " + (self?.objectType.rawValue)!  : (self?.nameTextField.text!)!
     }()
 
     override func viewDidLoad() {
@@ -38,14 +39,21 @@ class DetailViewController : UIViewController {
         let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(onCancel(_:)))
         self.navigationItem.leftBarButtonItem = cancelButton
 
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(onDone(_:)))
-        self.navigationItem.rightBarButtonItem = doneButton
-
         // do custom setup
         self.setup()
 
         // set the cursor to the title text
-        self.titleTextField.becomeFirstResponder()
+        self.nameTextField.becomeFirstResponder()
+    }
+
+    func showDoneButton() {
+
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(onDone(_:)))
+        self.navigationItem.rightBarButtonItem = doneButton
+    }
+
+    deinit {
+        targetObject = nil
     }
 
     // MARK: Override for each custom subclass

@@ -25,9 +25,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             splitViewController.preferredDisplayMode = .allVisible
         }
 
-        //let masterNavigationController = splitViewController.viewControllers[0] as! UINavigationController
-        //let controller = masterNavigationController.topViewController as! ProjectTableViewController
-        //controller.managedObjectContext = self.persistentContainer.viewContext
         return true
     }
 
@@ -52,8 +49,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
-
-        Storage.shared.save()
     }
 
     // MARK: - Split view
