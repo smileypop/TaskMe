@@ -9,6 +9,15 @@
 import UIKit
 import RealmSwift
 
+protocol TMDetailView {
+
+    func setup()
+
+    func addObject()
+
+    func updateObject()
+}
+
 class DetailViewController : UIViewController {
 
     // MARK: - Class properties
@@ -25,6 +34,7 @@ class DetailViewController : UIViewController {
     var viewMode:ViewMode!
     var objectType:ObjectType!
     var targetObject: Object?
+    var detailView:TMDetailView!
 
     lazy var objectName: String = { [weak self] in
         (self?.nameTextField.text!.isEmpty)! ? "My " + (self?.objectType.rawValue)!  : (self?.nameTextField.text!)!
@@ -39,8 +49,10 @@ class DetailViewController : UIViewController {
         let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(onCancel(_:)))
         self.navigationItem.leftBarButtonItem = cancelButton
 
+        self.detailView = self as! TMDetailView
+
         // do custom setup
-        self.setup()
+        self.detailView.setup()
 
         // set the cursor to the title text
         self.nameTextField.becomeFirstResponder()
@@ -56,22 +68,15 @@ class DetailViewController : UIViewController {
         targetObject = nil
     }
 
-    // MARK: Override for each custom subclass
-    func setup() {}
-
-    func addObject() {}
-
-    func updateObject() {}
-
     // MARK: Navigation actions
 
     func onDone(_ sender: Any) {
 
         switch(self.viewMode!) {
         case .add:
-            self.addObject()
+            self.detailView.addObject()
         case .update:
-            self.updateObject()
+            self.detailView.updateObject()
         }
 
     }

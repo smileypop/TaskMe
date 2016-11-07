@@ -9,17 +9,21 @@
 import UIKit
 import RealmSwift
 
-class TaskDetailViewController: DetailViewController {
+class TaskDetailViewController: DetailViewController, TMDetailView {
+
+    // MARK: - Custom properties
 
     @IBOutlet weak var deadlineDatePicker: UIDatePicker!
 
     var project:Project!
 
-    override func setup() {
+    // MARK: - TMDetailView protocol
+
+    func setup() {
 
         if let object:Task = self.targetObject as? Task {
 
-            self.nameTextField.text = object.name
+            self.nameTextField.text = object.title
 
             self.deadlineDatePicker.date = object.deadline as Date
 
@@ -31,52 +35,21 @@ class TaskDetailViewController: DetailViewController {
 
     }
 
-    // MARK: Objects
+    func addObject() {
 
-    override func addObject() {
+            let deadline = Int(floor(self.deadlineDatePicker.date.timeIntervalSince1970))
 
-//        if let object:Task = Storage.shared.createEntity(entityName: self.objectType.rawValue) as? Task {
-//
-//            setValues(for: object)
-//        }
-
-        let object = Task()
-
-        object.id = Models.getIdForNewObject(self.objectType)
-
-        object.project_id = self.project.id
-
-        // add this taks to the project tasks
-        Storage.shared.append(object, self.project.tasks)
-
-        setValues(for: object)
-
-        dismissSelf()
+            Server.postTask(project_id: self.project.id, title: self.objectName, deadline: deadline, onSuccess: dismissSelf)
     }
 
-    override func updateObject() {
+    func updateObject() {
 
         if let object = self.targetObject as? Task {
 
-            setValues(for: object)
+            let deadline = Int(floor(self.deadlineDatePicker.date.timeIntervalSince1970))
+            
+            Server.patchTask(project_id: object.project_id, id: object.id, title: self.objectName, deadline: deadline, onSuccess: dismissSelf)
         }
-        
-        dismissSelf()
-    }
-
-    func setValues(for object: Task)
-    {
-        //object.name = self.objectName
-
-        //object.deadline = self.deadlineDatePicker.date as NSDate
-
-        Storage.shared.add(object, [
-            "name" : self.objectName,
-            "deadline" : self.deadlineDatePicker.date as NSDate
-            ])
-
-        //Storage.shared.save()
-
     }
 
 }

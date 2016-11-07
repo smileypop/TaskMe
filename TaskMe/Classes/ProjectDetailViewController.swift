@@ -9,47 +9,30 @@
 import UIKit
 import RealmSwift
 
-class ProjectDetailViewController : DetailViewController {
+class ProjectDetailViewController : DetailViewController, TMDetailView {
 
-    override func setup() {
+    // MARK: - TMDetailView protocol
+
+    func setup() {
 
         if let object:Project = self.targetObject as? Project {
-                self.nameTextField.text = object.name
+            self.nameTextField.text = object.name
         }
 
     }
 
-    // MARK: Objects
+    func addObject() {
 
-    override func addObject() {
-
-        let object = Project()
-
-        object.id = Models.getIdForNewObject(self.objectType)
-
-        setValues(for: object)
-
-        dismissSelf()
+        Server.postProject(name: self.objectName, onSuccess: dismissSelf)
     }
 
-    override func updateObject() {
+    func updateObject() {
 
         if let object = self.targetObject as? Project {
 
-            setValues(for: object)
+            Server.patchProject(id: object.id, name: self.objectName, onSuccess:self.dismissSelf)
         }
 
-        dismissSelf()
-    }
-
-    func setValues(for object: Project)
-    {
-
-
-        Storage.shared.add(object, [
-            "name" : self.objectName
-            ])
-        
     }
     
 }

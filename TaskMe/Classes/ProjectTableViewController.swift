@@ -9,9 +9,7 @@
 import UIKit
 import RealmSwift
 
-class ProjectTableViewController : TableViewController {
-
-    var objectList: Results<Project>?
+class ProjectTableViewController : TMTableViewController, TMTableView {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,23 +18,16 @@ class ProjectTableViewController : TableViewController {
         // set the object type
         self.objectType = ObjectType.project
 
-        self.objectList = Storage.shared.objects(Project.self)
+        self.getObjects()
 
-        self.startNotifications(objectList: self.objectList!)
-
+        print("ProjectTableViewController viewDidLoad")
     }
 
-    // MARK: - Objects
+    // MARK: - Custom properties
 
-    override func getObjectCount() -> Int {
+    var objectList: Results<Project>?
 
-        return self.objectList?.count ?? 0
-    }
-
-    override func getObject(atIndex:Int) -> Project? {
-
-        return self.objectList?[atIndex]
-    }
+    // MARK: - Custom methods
 
     func getNumberOfCompletedTasks(_ project:Project) -> Int {
 
@@ -54,20 +45,39 @@ class ProjectTableViewController : TableViewController {
         
     }
 
-    // MARK: - Table View
+    // MARK: - Protocol implementations
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func getObjects() {
 
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! ProjectTableViewCell
-        //let object = self.fetchedResultsController.object(at: indexPath)
-        if let object = self.getObject(atIndex: indexPath.row) {
-            self.configureCell(cell, withObject: object)
-        }
+        self.objectList = Storage.shared.objects(Project.self)
 
-        return cell
+        self.startNotifications(objectList: self.objectList!)
+
+        Server.getProjects()
+
     }
 
-    override func configureCell(_ cell: UITableViewCell, withObject object: Object) {
+    func refreshObjects() {
+
+        print("refreshObjects")
+
+        Storage.shared.deleteAll( {
+
+            Server.getProjects()
+            
+        })
+    }
+
+    func getObject(atIndex:Int) -> Object? {
+
+        return self.objectList?[atIndex]
+    }
+
+    func getObjectCount() -> Int {
+
+        return self.objectList?.count ?? 0
+    }
+    func configureCell(_ cell: UITableViewCell, withObject object: Object) {
 
         if let project = object as? Project {
 
@@ -78,9 +88,23 @@ class ProjectTableViewController : TableViewController {
         }
     }
 
-    // MARK: - Detail View
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-    override func showDetailView(mode: String, object: Object? = nil)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! ProjectTableViewCell
+
+        if let object = self.getObject(atIndex: indexPath.row) {
+            self.configureCell(cell, withObject: object)
+        }
+
+        return cell
+    }
+
+    func showDetailView(mode: String)
+    {
+        self.showDetailView(mode: mode, object:nil)
+    }
+
+    func showDetailView(mode: String, object: Object?)
     {
         let modalViewController: ProjectDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "ProjectDetail") as! ProjectDetailViewController
 
@@ -107,7 +131,7 @@ class ProjectTableViewController : TableViewController {
 
                 let destination = segue.destination as! TaskTableViewController
 
-                if let object = getObject(atIndex: indexPath.row) {
+                if let object = getObject(atIndex: indexPath.row) as? Project {
 
                     destination.project = object
 

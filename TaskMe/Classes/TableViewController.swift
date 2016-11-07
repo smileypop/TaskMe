@@ -9,9 +9,29 @@
 import UIKit
 import RealmSwift
 
-// MARK: - Protocol Methods
+// MARK: - Protocol
 
-class TableViewController: UITableViewController/*, NSFetchedResultsControllerDelegate */{
+protocol TMTableView {
+
+    func getObjects()
+
+    func getObject(atIndex:Int) -> Object?
+
+    func getObjectCount() -> Int
+
+    func configureCell(_ cell: UITableViewCell, withObject object: Object)
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
+
+    func showDetailView(mode: String)
+
+    func showDetailView(mode: String, object: Object?)
+
+}
+
+// MARK: - Class
+
+class TMTableViewController: UITableViewController {
 
     var notificationToken: NotificationToken? = nil
 
@@ -20,15 +40,26 @@ class TableViewController: UITableViewController/*, NSFetchedResultsControllerDe
     var objectType:ObjectType!
     var targetObject: Object? = nil
 
+    var tmTableView:TMTableView!
+
     // MARK: - View controller methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
 
+        // set ourselves
+        self.tmTableView = self as! TMTableView
+
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(onAddButtonPress(_:)))
-        self.navigationItem.rightBarButtonItem = addButton
-        //self.navigationItem.rightBarButtonItems = [self.editButtonItem, addButton]
+
+        // TURN ON for testing
+        //let refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(onRefreshButtonPress(_:)))
+
+        self.navigationItem.rightBarButtonItems = [addButton, self.editButtonItem/*, refreshButton */]
+
+        // add error listener
+        Network.errorActions.append(onNetworkError)
     }
 
     deinit {
@@ -82,30 +113,32 @@ class TableViewController: UITableViewController/*, NSFetchedResultsControllerDe
 
         self.stopEditing()
 
-        self.showDetailView(mode: DetailViewController.ViewMode.add.rawValue)
+        self.tmTableView.showDetailView(mode: DetailViewController.ViewMode.add.rawValue)
     }
 
-    // MARK: - Methods to override in subclass
+    func onRefreshButtonPress(_ sender: Any) {
 
-    func showDetailView(mode: String, object: Object? = nil) {
-
+        // TESTING ONLY - what happens with the server has an error?
+        Server.fakeError()
     }
 
-    // MARK: - Objects
+    func onNetworkError() {
 
-    func getObjectCount() -> Int {
-        return 0
-    }
+        if self is ProjectTableViewController {
 
-    func getObject(atIndex:Int) -> Object? {
+            // refresh objects
+            (self as! ProjectTableViewController).refreshObjects()
 
-        return nil
+        } else if self is TaskTableViewController {
+
+            // go back to Projects
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 
     func updateObject(atIndexPath indexPath: IndexPath)
     {
-//        self.showDetailView(mode: DetailViewController.ViewMode.update.rawValue, object:self.fetchedResultsController.object(at: indexPath) as? NSManagedObject)
-        self.showDetailView(mode: DetailViewController.ViewMode.update.rawValue, object:self.getObject(atIndex: indexPath.row))
+        self.tmTableView.showDetailView(mode: DetailViewController.ViewMode.update.rawValue, object:self.tmTableView.getObject(atIndex: indexPath.row))
     }
 
     // Delete Confirmation and Handling
@@ -113,12 +146,23 @@ class TableViewController: UITableViewController/*, NSFetchedResultsControllerDe
 
         if let object = targetObject {
 
-            let title = object.value(forKey: ObjectAttributes.name.rawValue)
+            let title:String!
 
-            let alert = UIAlertController(title: "Delete \(self.objectType.rawValue)", message: "Are you sure you want to permanently delete \"\(title)\"?", preferredStyle: .actionSheet)
+            switch objectType! {
+
+            case .project:
+
+                title = object.value(forKey: ObjectAttribute.name.rawValue) as! String!
+
+            case .task:
+
+                title = object.value(forKey: ObjectAttribute.title.rawValue) as! String!
+            }
+
+            let alert = UIAlertController(title: "Delete \(self.objectType.rawValue)", message: "Are you sure you want to permanently delete \"\(title!)\"?", preferredStyle: .actionSheet)
 
             let deleteAction = UIAlertAction(title: "Delete", style: .destructive, handler: deleteObject)
-            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: finishDeleteObject)
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: cancelDeleteObject)
 
             alert.addAction(deleteAction)
             alert.addAction(cancelAction)
@@ -134,44 +178,55 @@ class TableViewController: UITableViewController/*, NSFetchedResultsControllerDe
     func deleteObject(alertAction: UIAlertAction!) {
         if let object = targetObject {
 
-            //context.delete(object)
-
             // if object is a project, delete all of its tasks
-            if objectType! == .project {
+            switch objectType! {
+
+            case .project:
+
+                let project = object as! Project
 
                 for task in (object as! Project).tasks {
 
-                    Storage.shared.delete(task)
+                    Server.deleteTask(project_id: task.project_id, id: task.id)
                 }
 
+                Server.deleteProject(id: project.id, onSuccess: { [weak self] in
+
+                    // remove object
+                    self?.targetObject = nil
+                    
+                })
+
+            case .task:
+
+                let task = object as! Task
+                
+                Server.deleteTask(project_id: task.project_id, id: task.id, onSuccess: { [weak self] in
+
+                    // remove object
+                    self?.targetObject = nil
+
+                })
+                
             }
 
-            Storage.shared.delete(object)
-
-            //saveContext()
-
-            //Storage.shared.save()
-
-            // remove object
-            targetObject = nil
         }
     }
 
-    func finishDeleteObject(alertAction: UIAlertAction!) {
-        targetObject = nil
+    func cancelDeleteObject(alertAction: UIAlertAction!) {
+
+        // remove object
+        self.targetObject = nil
     }
 
     // MARK: - Table View
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        //return self.fetchedResultsController.sections?.count ?? 0
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        let sectionInfo = self.fetchedResultsController.sections![section]
-//        return sectionInfo.numberOfObjects
-        return self.getObjectCount()
+        return self.tmTableView.getObjectCount()
     }
 
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -183,17 +238,12 @@ class TableViewController: UITableViewController/*, NSFetchedResultsControllerDe
 
     }
 
-    //    override func setEditing(_ editing: Bool, animated: Bool) {
-    //        super.setEditing(editing, animated: animated)
-    //        tableView.reloadData()
-    //    }
-
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { [weak self] (action, indexPath) in
             // ask to delete item at indexPath
-            //self?.targetObject = self?.fetchedResultsController.object(at: indexPath) as? NSManagedObject
-            self?.targetObject = self?.getObject(atIndex: indexPath.row)
+
+            self?.targetObject = self?.tmTableView.getObject(atIndex: indexPath.row)
             self?.askToDeleteObject()
 
             self?.stopEditing()
@@ -219,8 +269,6 @@ class TableViewController: UITableViewController/*, NSFetchedResultsControllerDe
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     }
 
-    func configureCell(_ cell: UITableViewCell, withObject object: Object) {}
-
     // Hide the "Edit / Delete" menu
     func stopEditing() {
         self.tableView.setEditing(false, animated: true)
@@ -235,83 +283,6 @@ class TableViewController: UITableViewController/*, NSFetchedResultsControllerDe
 
         }
     }
-
-    // MARK: - Fetched results controller
-
-//    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult> {
-//        if _fetchedResultsController != nil {
-//            return _fetchedResultsController!
-//        }
-//
-//        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: objectType.rawValue)
-//
-//        // Set the batch size to a suitable number.
-//        //fetchRequest.fetchBatchSize = 100
-//
-//        // Edit the sort key as appropriate.
-//        let sortDescriptor = NSSortDescriptor(key: self.sortDescriptor.rawValue, ascending: true)
-//
-//        fetchRequest.sortDescriptors = [sortDescriptor]
-//
-//        // Edit the section name key path and cache name if appropriate.
-//        // nil for section name key path means "no sections".
-//        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: Storage.shared.context, sectionNameKeyPath: nil, cacheName: "Master")
-//        aFetchedResultsController.delegate = self
-//        _fetchedResultsController = aFetchedResultsController
-//
-//        do {
-//            try _fetchedResultsController!.performFetch()
-//        } catch {
-//            // Replace this implementation with code to handle the error appropriately.
-//            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-//            let nserror = error as NSError
-//            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-//        }
-//
-//        return _fetchedResultsController!
-//    }
-//    var _fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? = nil
-//
-//    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-//        self.tableView.beginUpdates()
-//    }
-//
-//    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
-//        switch type {
-//        case .insert:
-//            self.tableView.insertSections(IndexSet(integer: sectionIndex), with: .fade)
-//        case .delete:
-//            self.tableView.deleteSections(IndexSet(integer: sectionIndex), with: .fade)
-//        default:
-//            return
-//        }
-//    }
-//
-//    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-//        switch type {
-//        case .insert:
-//            tableView.insertRows(at: [newIndexPath!], with: .fade)
-//        case .delete:
-//            tableView.deleteRows(at: [indexPath!], with: .fade)
-//        case .update:
-//            self.configureCell(tableView.cellForRow(at: indexPath!)!, withObject: anObject)
-//        case .move:
-//            tableView.moveRow(at: indexPath!, to: newIndexPath!)
-//        }
-//    }
-//
-//    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-//        self.tableView.endUpdates()
-//    }
-
-    /*
-     // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed.
-     
-     func controllerDidChangeContent(controller: NSFetchedResultsController) {
-     // In the simplest, most efficient, case, reload the table view.
-     self.tableView.reloadData()
-     }
-     */
     
 }
 

@@ -17,14 +17,9 @@ class TaskTableViewCell: UITableViewCell {
 
     @IBAction func onCompletedSwitchToggle(sender: UISwitch)
     {
-        print("onCompletedSwitchToggle")
-
         if let object = task {
 
-            print("task completed changed")
-
-            Storage.shared.add(object, ["completed" : sender.isOn])
-
+            Server.patchTask(project_id: object.project_id, id: object.id, completed: sender.isOn)
         }
     }
 
