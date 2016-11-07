@@ -29,6 +29,7 @@
 		93D7E6D81DC70F6B008BAEF8 /* ProjectTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7E6D71DC70F6B008BAEF8 /* ProjectTableViewController.swift */; };
 		93D7E6DA1DC722A8008BAEF8 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7E6D91DC722A8008BAEF8 /* DetailViewController.swift */; };
 		93EE04321DCEA182006623BE /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EE04311DCEA182006623BE /* SwiftyJSON.swift */; };
+		93EE04341DD00B2D006623BE /* EmptyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EE04331DD00B2D006623BE /* EmptyViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -69,6 +70,7 @@
 		93D7E6D71DC70F6B008BAEF8 /* ProjectTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectTableViewController.swift; sourceTree = "<group>"; };
 		93D7E6D91DC722A8008BAEF8 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		93EE04311DCEA182006623BE /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
+		93EE04331DD00B2D006623BE /* EmptyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +151,7 @@
 				935550F71DC1CB7F00423037 /* TaskTableViewCell.swift */,
 				935550F01DC1CA8A00423037 /* TaskDetailViewController.swift */,
 				930582F91DC94779003C56C1 /* TableViewCell.swift */,
+				93EE04331DD00B2D006623BE /* EmptyViewController.swift */,
 			);
 			name = Classes;
 			path = TaskMe/Classes;
@@ -255,6 +258,7 @@
 			files = (
 				93D7E6DA1DC722A8008BAEF8 /* DetailViewController.swift in Sources */,
 				935550F61DC1CA8A00423037 /* TaskTableViewController.swift in Sources */,
+				93EE04341DD00B2D006623BE /* EmptyViewController.swift in Sources */,
 				935550F81DC1CB7F00423037 /* TaskTableViewCell.swift in Sources */,
 				93EE04321DCEA182006623BE /* SwiftyJSON.swift in Sources */,
 				9348F7091DCB0B7F00411453 /* Custom.swift in Sources */,
@@ -408,6 +412,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.matthewlaird.TaskMe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -429,6 +434,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.matthewlaird.TaskMe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

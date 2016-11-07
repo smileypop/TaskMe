@@ -18,7 +18,7 @@ protocol TMDetailView {
     func updateObject()
 }
 
-class DetailViewController : UIViewController {
+class DetailViewController : UIViewController, UITextFieldDelegate {
 
     // MARK: - Class properties
 
@@ -56,12 +56,25 @@ class DetailViewController : UIViewController {
 
         // set the cursor to the title text
         self.nameTextField.becomeFirstResponder()
+
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:))))
+
     }
 
     func showDoneButton() {
 
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(onDone(_:)))
         self.navigationItem.rightBarButtonItem = doneButton
+    }
+
+    func dismissKeyboard(_ sender: Any) {
+        self.nameTextField.resignFirstResponder()
+
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 
     deinit {
@@ -87,7 +100,17 @@ class DetailViewController : UIViewController {
     }
 
     func dismissSelf() {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: {
+
+            let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
+
+            // hide menu for iPad
+            if (UIDevice.current.userInterfaceIdiom == .pad) {
+                appDelegate.splitViewController.preferredDisplayMode = .allVisible
+                
+            }
+
+        })
     }
 
 }

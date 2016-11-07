@@ -99,8 +99,8 @@ class TaskTableViewController: TMTableViewController, TMTableView {
 
             let taskCell = cell as! TaskTableViewCell
 
-            taskCell.textLabel!.text = task.title
-            taskCell.deadlineLabel!.text = (task.deadline as Date).toString(format: "yyyy年MM月dd日")
+            taskCell.titleLabel!.text = task.title
+            taskCell.deadlineLabel!.text = (task.deadline as Date).toString(format: "yyyy/MM/dd")
             taskCell.completedSwitch!.isOn = task.completed
 
             taskCell.task = task
@@ -126,7 +126,16 @@ class TaskTableViewController: TMTableViewController, TMTableView {
         let navigationController = UINavigationController(rootViewController: modalViewController)
         navigationController.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
 
-        self.present(navigationController, animated: true, completion: {
+        let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
+
+        // hide menu for iPad
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+            appDelegate.splitViewController.preferredDisplayMode = .primaryHidden
+
+        }
+
+        // Choose view based on iPhone or iPad
+        appDelegate.getTopViewController().present(navigationController, animated: true, completion: {
 
             modalViewController.showDoneButton()
             

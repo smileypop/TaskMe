@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TaskTableViewCell: UITableViewCell {
+class TaskTableViewCell: TableViewCell {
 
     @IBOutlet weak var deadlineLabel: UILabel!
     @IBOutlet weak var completedSwitch: UISwitch!

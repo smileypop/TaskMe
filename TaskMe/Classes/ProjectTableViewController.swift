@@ -83,7 +83,7 @@ class ProjectTableViewController : TMTableViewController, TMTableView {
 
             let projectCell = cell as! ProjectTableViewCell
 
-            projectCell.textLabel!.text = project.name
+            projectCell.titleLabel!.text = project.name
             projectCell.completedTasksLabel!.text = "\(self.getNumberOfCompletedTasks(project)) / \(project.tasks.count)"
         }
     }
@@ -116,10 +116,19 @@ class ProjectTableViewController : TMTableViewController, TMTableView {
         let navigationController = UINavigationController(rootViewController: modalViewController)
         navigationController.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
 
-        self.present(navigationController, animated: true, completion: {
+        let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
+
+        // hide menu for iPad
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+            appDelegate.splitViewController.preferredDisplayMode = .primaryHidden
+
+        }
+
+        // Choose view based on iPhone or iPad
+        appDelegate.getTopViewController().present(navigationController, animated: true, completion: {
 
             modalViewController.showDoneButton()
-            
+
         })
     }
 

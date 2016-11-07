@@ -142,7 +142,7 @@ class TMTableViewController: UITableViewController {
     }
 
     // Delete Confirmation and Handling
-    func askToDeleteObject() {
+    func askToDeleteObject(at indexPath: IndexPath) {
 
         if let object = targetObject {
 
@@ -169,7 +169,14 @@ class TMTableViewController: UITableViewController {
 
             // Support presentation in iPad
             alert.popoverPresentationController?.sourceView = self.view
-            alert.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.size.width / 2.0, y: self.view.bounds.size.height / 2.0, width: 1.0, height: 1.0)
+
+            if (UIDevice.current.userInterfaceIdiom == .pad) {
+
+                alert.popoverPresentationController?.sourceRect = self.tableView.rectForRow(at: indexPath)
+
+            } else {
+                alert.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.size.width / 2.0, y: self.view.bounds.size.height / 2.0, width: 1.0, height: 1.0)
+            }
 
             self.present(alert, animated: true, completion: nil)
         }
@@ -244,7 +251,7 @@ class TMTableViewController: UITableViewController {
             // ask to delete item at indexPath
 
             self?.targetObject = self?.tmTableView.getObject(atIndex: indexPath.row)
-            self?.askToDeleteObject()
+            self?.askToDeleteObject(at: indexPath)
 
             self?.stopEditing()
         }
