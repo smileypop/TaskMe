@@ -9,13 +9,17 @@
 import Foundation
 import RealmSwift
 
+// THIS IS A CUSTOM CLASS FOR STORING PROJECT DATA SETTINGS - it must be customized for each project
+
 // MARK: - Enums
 
+// Object Types
 enum ObjectType: String {
     case project = "Project"
     case task = "Task"
 }
 
+// Object Attributes
 enum ObjectAttribute: String {
     case id
     case project_id
@@ -27,7 +31,8 @@ enum ObjectAttribute: String {
     case task_sort_type
 }
 
-class ObjectPath {
+// Object Path on server
+enum ObjectPath {
     static let server = "http://localhost:8090"
     static let projects = "/projects"
     static let tasks = "/tasks"
@@ -42,6 +47,7 @@ class Project: Object {
     dynamic var task_sort_type = "title"
     let tasks = List<Task>()
 
+    // unique key for lookup
     override static func primaryKey() -> String? {
         return "id"
     }
@@ -60,6 +66,7 @@ class Task: Object {
     dynamic var deadline = NSDate()
     dynamic var completed = false
 
+    // unique key for lookup
     override static func primaryKey() -> String? {
         return "id"
     }
@@ -69,10 +76,13 @@ class Task: Object {
     }
 }
 
+// MARK: - Server
+
 class Server {
 
     // MARK: - Projects
 
+    // get all projects
     static func getProjects(onSuccess: (()->Void)? = nil) {
 
         // GET http://localhost:8090/projects
@@ -84,12 +94,14 @@ class Server {
 
     }
 
+    // get a project by id
     static func getProject(id: String, onSuccess: @escaping ()->Void) {
 
         // GET http://localhost:8090/projects/6
         Network.request(with: .GET, from: [ObjectPath.server, ObjectPath.projects, "/\(id)"])
     }
 
+    // create a new project by name
     static func postProject(name: String, onSuccess: (()->Void)? = nil) {
 
         // POST http://localhost:8090/projects?name=HiNative
@@ -100,6 +112,7 @@ class Server {
         })
     }
 
+    // update a project by id
     static func patchProject(id: String, name: String, onSuccess: (()->Void)? = nil) {
 
         // PATCH http://localhost:8090/projects/6?name=NewName
@@ -110,6 +123,7 @@ class Server {
         })
     }
 
+    // delete a project by id
     static func deleteProject(id: String, onSuccess: (()->Void)? = nil) {
 
         // DELETE http://localhost:8090/projects/6
@@ -122,12 +136,14 @@ class Server {
 
     // MARK: - Tasks
 
+    // get a task by id
     static func getTask(project_id:String, id: String) {
 
         // GET http://localhost:8090/projects/1/tasks/1
         Network.request(with: .GET, from: [ObjectPath.server, ObjectPath.projects, "/\(project_id)", ObjectPath.tasks, "/\(id)"])
     }
 
+    // create a new task by title
     static func postTask(project_id:String, title: String, deadline: Int, onSuccess: (()->Void)? = nil) {
 
         // POST http://localhost:8090/projects/6/tasks?title=task&deadline=16284&completed=false
@@ -138,6 +154,7 @@ class Server {
         })
     }
 
+    // update a task title and deadline by id
     static func patchTask(project_id:String, id: String, title: String, deadline: Int, onSuccess: (()->Void)? = nil) {
 
         // PATCH http://localhost:8090/projects/6/tasks/2?title=changed&deadline=21196
@@ -148,6 +165,7 @@ class Server {
         })
     }
 
+    // update a task is completed (true/false)
     static func patchTask(project_id:String, id: String, completed:Bool, onSuccess: (()->Void)? = nil) {
 
         // PATCH http://localhost:8090/projects/6/tasks/2?completed=false
@@ -158,6 +176,7 @@ class Server {
         })
     }
 
+    // delete a task by id
     static func deleteTask(project_id:String, id: String, onSuccess: (()->Void)? = nil) {
 
         // DELETE http://localhost:8090/projects/6/tasks/2
@@ -168,51 +187,18 @@ class Server {
         })
     }
 
-    // MARK: - Errors
-
-    static func fakeError() {
-
-        Network.request(with: .GET, from: ["fakePath"])
-    }
-
 }
-
-// MARK: - Models
-
-//class Models {
-//
-//    static var idForNewObject = [ObjectType.project.rawValue : 1,
-//                         ObjectType.task.rawValue : 1]
-//
-//    static func getIdForNewObject(_ type:ObjectType) -> Int
-//    {
-//
-//        if let objectId = idForNewObject[type.rawValue] {
-//
-//            idForNewObject[type.rawValue]! += 1
-//
-//            return objectId
-//
-//        }
-//
-//        return 0
-//    }
-//
-//}
 
 // MARK: - Factory
 
 class Factory {
 
+    // MARK: - All Objects
+
+    // Create all projects and tasks from the Server data
     static func addObjects(json:JSON, callback:(()->Void)? = nil) {
 
         var projects = [Project]()
-
-        //If json is .Array
-        //The `index` is 0..<json.count's string value
-        for (_, subJson):(String, JSON) in json {
-            //Do something you want
-            //print(subJson)
 
             // loop through projects
             for (_,projectJson):(String, JSON) in json {
@@ -224,7 +210,7 @@ class Factory {
 
                 if let tasksJson:JSON = projectJson[ObjectAttribute.tasks.rawValue] {
 
-                    // loop through projects
+                    // loop through tasks
                     for (_, taskJson):(String, JSON) in tasksJson {
 
                         let task = self.createTask(json: taskJson)
@@ -236,29 +222,15 @@ class Factory {
 
                 }
 
-            }
         }
 
         Storage.shared.add(projects, callback)
 
     }
 
-    static func updateProject(id: String, json:JSON, callback:(()->Void)? = nil) {
+    // MARK: - Projects
 
-        Storage.shared.update(Project.self, id, [
-            ObjectAttribute.name.rawValue : json[ObjectAttribute.name.rawValue].string?.removingPercentEncoding ?? ""
-            ], callback)
-
-    }
-
-    static func addProject(json:JSON, callback:(()->Void)? = nil) {
-
-        let project = createProject(json: json)
-
-        Storage.shared.add(project, callback)
-
-    }
-
+    // create a new project by JSON
     static func createProject(json:JSON) -> Project {
 
         let project = Project()
@@ -267,22 +239,36 @@ class Factory {
         project.name = json[ObjectAttribute.name.rawValue].string?.removingPercentEncoding ?? ""
 
         return project
+        
+    }
+
+    // add a new project to storage
+    static func addProject(json:JSON, callback:(()->Void)? = nil) {
+
+        let project = createProject(json: json)
+
+        Storage.shared.add(project, callback)
+        
+    }
+
+    // update a project in storage
+    static func updateProject(id: String, json:JSON, callback:(()->Void)? = nil) {
+
+        Storage.shared.update(Project.self, id, [
+            ObjectAttribute.name.rawValue : json[ObjectAttribute.name.rawValue].string?.removingPercentEncoding ?? ""
+            ], callback)
 
     }
 
+    // delete a project from storage
     static func deleteProject(id: String, callback:(()->Void)? = nil) {
 
         Storage.shared.delete(Project.self, id, callback)
     }
 
-    static func addTask(json:JSON, callback:(()->Void)? = nil) {
+    // MARK: - Tasks
 
-        let task = createTask(json: json)
-
-        Storage.shared.append(task, Project.self, task.project_id, ObjectAttribute.tasks.rawValue, callback)
-
-    }
-
+    // create a new task by JSON
     static func createTask(json:JSON) -> Task {
 
         let task = Task()
@@ -297,11 +283,21 @@ class Factory {
             task.deadline = NSDate(timeIntervalSince1970: Double(deadline))
 
         }
-
+        
         return task
+        
+    }
+
+    // add a new task to storage
+    static func addTask(json:JSON, callback:(()->Void)? = nil) {
+
+        let task = createTask(json: json)
+
+        Storage.shared.append(task, Project.self, task.project_id, ObjectAttribute.tasks.rawValue, callback)
 
     }
 
+    // update a task in storage
     static func updateTask(id: String, json:JSON, callback:(()->Void)? = nil) {
 
         var values = [String: Any]()
@@ -322,6 +318,7 @@ class Factory {
         
     }
 
+    // delete a task in storage
     static func deleteTask(id: String, callback:(()->Void)? = nil) {
 
         Storage.shared.delete(Task.self, id, callback)

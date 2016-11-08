@@ -8,23 +8,24 @@
 
 import UIKit
 
-class TaskTableViewCell: TableViewCell {
+class TaskTableViewCell: TMTableViewCell {
 
     @IBOutlet weak var deadlineLabel: UILabel!
     @IBOutlet weak var completedSwitch: UISwitch!
 
-    var task:Task? = nil
+    var task:Task!
 
+    // User clicked the Completed toggle
     @IBAction func onCompletedSwitchToggle(sender: UISwitch)
     {
         if let object = task {
 
+            // Server - update task
             Server.patchTask(project_id: object.project_id, id: object.id, completed: sender.isOn)
         }
     }
 
-    deinit
-    {
+    deinit {
         task = nil
     }
 }

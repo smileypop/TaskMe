@@ -16,12 +16,15 @@ class Network {
 
     }
 
+    // Keep a lister of Error listeners
     static var errorActions = [()->Void]()
 
+    // Create a URL path
     static func getPath(from params:[String]) -> String {
 
         var url = ""
 
+        // add each param to the path
         for param in params {
             url.append(String(param))
         }
@@ -29,8 +32,10 @@ class Network {
         return url
     }
 
+    // Try to make a server request
     static func request(with method: HTTPMethod, from params:[String], onSuccess: ((JSON)->Void)? = nil) {
 
+        // create a path
         let path = getPath(from: params)
 
         // We need to % encode the query params
@@ -43,14 +48,14 @@ class Network {
         let task = URLSession.shared.dataTask(with: request) {
             data, response, error in
             guard error == nil else {
+
+                // ERROR
                 print(error!)
 
+                // create an alert
                 let alertController = UIAlertController(title: "ERROR", message: "Please turn on the server and try again.", preferredStyle: UIAlertControllerStyle.alert)
 
                 let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
-
-                    // try the request again
-                    //self.request(with: method, from: params, onSuccess: onSuccess)
 
                     // execute error actions
                     for action in self.errorActions {
@@ -61,6 +66,7 @@ class Network {
 
                 alertController.addAction(okAction)
 
+                // show the alert
                 if let rootVC = UIApplication.shared.keyWindow?.rootViewController {
                     rootVC.present(alertController, animated: true)
                 }
@@ -68,13 +74,17 @@ class Network {
                 return
             }
             guard let data = data else {
+
+                // NO DATA
                 print("Data is empty")
 
+                // call the success method with null
                 onSuccess?(JSON.null)
 
                 return
             }
 
+            // call the success method with JSON data
             onSuccess?(JSON(data:data))
         }
         

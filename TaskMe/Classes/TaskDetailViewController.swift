@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class TaskDetailViewController: DetailViewController, TMDetailView {
+class TaskDetailViewController: TMDetailViewController, TMDetailViewDelegate {
 
     // MARK: - Custom properties
 
@@ -17,17 +17,26 @@ class TaskDetailViewController: DetailViewController, TMDetailView {
 
     var project:Project!
 
+    // MARK: - Custom methods
+
+    deinit {
+        project = nil
+    }
+
     // MARK: - TMDetailView protocol
 
     func setup() {
 
-        if let object:Task = self.targetObject as? Task {
+        // EDIT the task
+        if let object = self.targetObject as? Task {
 
             self.nameTextField.text = object.title
 
             self.deadlineDatePicker.date = object.deadline as Date
 
         } else {
+
+            // ADD a new task
 
             // set the minimum date to today
             self.deadlineDatePicker.minimumDate = Date()
@@ -37,19 +46,23 @@ class TaskDetailViewController: DetailViewController, TMDetailView {
 
     func addObject() {
 
-            let deadline = Int(floor(self.deadlineDatePicker.date.timeIntervalSince1970))
+        // store the time as an Int
+        let deadline = Int(floor(self.deadlineDatePicker.date.timeIntervalSince1970))
 
-            Server.postTask(project_id: self.project.id, title: self.objectName, deadline: deadline, onSuccess: dismissSelf)
+        // Server - add task
+        Server.postTask(project_id: self.project.id, title: self.objectName, deadline: deadline, onSuccess: dismissSelf)
     }
 
     func updateObject() {
 
         if let object = self.targetObject as? Task {
 
+            // store the time as an Int
             let deadline = Int(floor(self.deadlineDatePicker.date.timeIntervalSince1970))
-            
+
+            // Server update task
             Server.patchTask(project_id: object.project_id, id: object.id, title: self.objectName, deadline: deadline, onSuccess: dismissSelf)
         }
     }
-
+    
 }

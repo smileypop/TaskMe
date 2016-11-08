@@ -31,25 +31,25 @@ struct Storage {
 
     }()
 
+
+    // get all Objects of Type
     mutating func objects<T: Object>(_ type: T.Type) -> Results<T>? {
 
         return self.defaultRealm.objects(type)
     }
 
+    // add an Object
     mutating func add(_ object: Object, _ onSuccess: (() -> Void)? = nil) {
 
         DispatchQueue(label: "addObject").async {
             autoreleasepool {
 
-                // Get realm and table instances for this thread
                 let realm = try! Realm(configuration: Realm.Configuration(inMemoryIdentifier: "MyInMemoryRealm"))
 
                 realm.beginWrite()
 
                 realm.add(object, update: true)
 
-                // Commit the write transaction
-                // to make this data available to other threads
                 try! realm.commitWrite()
 
                 onSuccess?()
@@ -58,12 +58,12 @@ struct Storage {
         }
     }
 
+    // add an array of Objects
     mutating func add(_ objects: [Object], _ onSuccess: (() -> Void)? = nil) {
 
         DispatchQueue(label: "addObjects").async {
             autoreleasepool {
 
-                // Get realm and table instances for this thread
                 let realm = try! Realm(configuration: Realm.Configuration(inMemoryIdentifier: "MyInMemoryRealm"))
 
                 realm.beginWrite()
@@ -72,8 +72,6 @@ struct Storage {
                     realm.add(object, update: true)
                 }
 
-                // Commit the write transaction
-                // to make this data available to other threads
                 try! realm.commitWrite()
 
                 onSuccess?()
@@ -83,12 +81,12 @@ struct Storage {
 
     }
 
+    // update an Object
     mutating func update<T: Object>(_ type: T.Type, _ id: String, _ dictionary: [String: Any], _ onSuccess: (() -> Void)? = nil) {
 
         DispatchQueue(label: "updateObject").async {
             autoreleasepool {
 
-                // Get realm and table instances for this thread
                 let realm = try! Realm(configuration: Realm.Configuration(inMemoryIdentifier: "MyInMemoryRealm"))
 
                 realm.beginWrite()
@@ -101,8 +99,6 @@ struct Storage {
                     }
                 }
 
-                // Commit the write transaction
-                // to make this data available to other threads
                 try! realm.commitWrite()
                 
                 onSuccess?()
@@ -111,12 +107,12 @@ struct Storage {
         }
     }
 
+    // delete an Object
     mutating func delete<T: Object>(_ type: T.Type, _ id: String, _ onSuccess: (() -> Void)? = nil) {
 
         DispatchQueue(label: "deleteObject").async {
             autoreleasepool {
 
-                // Get realm and table instances for this thread
                 let realm = try! Realm(configuration: Realm.Configuration(inMemoryIdentifier: "MyInMemoryRealm"))
 
                 realm.beginWrite()
@@ -126,8 +122,6 @@ struct Storage {
                     realm.delete(object)
                 }
 
-                // Commit the write transaction
-                // to make this data available to other threads
                 try! realm.commitWrite()
                 
                 onSuccess?()
@@ -136,12 +130,12 @@ struct Storage {
         }
     }
 
+    // delete all Objects
     mutating func deleteAll(_ onSuccess: (() -> Void)? = nil) {
 
         DispatchQueue(label: "deleteAll").async {
             autoreleasepool {
 
-                // Get realm and table instances for this thread
                 let realm = try! Realm(configuration: Realm.Configuration(inMemoryIdentifier: "MyInMemoryRealm"))
 
                 try! realm.write {
@@ -154,12 +148,12 @@ struct Storage {
         }
     }
 
+    // add an Object to a List
     mutating func append<T: Object, P: Object>(_ object: T, _ parentType: P.Type, _ parentId: String, _ listName: String, _ onSuccess: (() -> Void)? = nil) {
 
         DispatchQueue(label: "appendObject").async {
             autoreleasepool {
 
-                // Get realm and table instances for this thread
                 let realm = try! Realm(configuration: Realm.Configuration(inMemoryIdentifier: "MyInMemoryRealm"))
 
                 realm.beginWrite()
@@ -170,8 +164,6 @@ struct Storage {
                         list.append(object)
                     }
 
-                    // Commit the write transaction
-                    // to make this data available to other threads
                     try! realm.commitWrite()
                     
                     onSuccess?()
@@ -180,30 +172,6 @@ struct Storage {
             }
         }
     }
-
-    //    mutating func writeToRealm(_ realm:Realm, action: @escaping () -> Void, onSuccess: (() -> Void)? = nil) {
-    //
-    //        DispatchQueue(label: "writeToRealm").async {
-    //            autoreleasepool {
-    //
-    //                // Get realm and table instances for this thread
-    //                //let realm = try! Realm(configuration: Realm.Configuration(inMemoryIdentifier: "MyInMemoryRealm"))
-    //
-    //                realm.beginWrite()
-    //
-    //                // do action
-    //                action()
-    //
-    //                // Commit the write transaction
-    //                // to make this data available to other threads
-    //                try! realm.commitWrite()
-    //
-    //                onSuccess?()
-    //
-    //            }
-    //        }
-    //
-    //    }
 
 }
 

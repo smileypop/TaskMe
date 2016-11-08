@@ -8,6 +8,8 @@
 
 import UIKit
 
+// TODO: build out this class
+
 class EmptyViewController : UIViewController {
 
 }

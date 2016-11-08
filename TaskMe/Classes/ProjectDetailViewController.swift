@@ -9,13 +9,14 @@
 import UIKit
 import RealmSwift
 
-class ProjectDetailViewController : DetailViewController, TMDetailView {
+class ProjectDetailViewController : TMDetailViewController, TMDetailViewDelegate {
 
-    // MARK: - TMDetailView protocol
+    // MARK: - TMDetailViewDelegate protocol
 
     func setup() {
 
-        if let object:Project = self.targetObject as? Project {
+        // Show project name
+        if let object = self.targetObject as? Project {
             self.nameTextField.text = object.name
         }
 
@@ -23,11 +24,13 @@ class ProjectDetailViewController : DetailViewController, TMDetailView {
 
     func addObject() {
 
+        // Server - add a new project
         Server.postProject(name: self.objectName, onSuccess: dismissSelf)
     }
 
     func updateObject() {
 
+        // Server - update project
         if let object = self.targetObject as? Project {
 
             Server.patchProject(id: object.id, name: self.objectName, onSuccess:self.dismissSelf)

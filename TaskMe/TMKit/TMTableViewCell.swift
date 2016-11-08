@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TableViewCell: UITableViewCell {
+class TMTableViewCell: UITableViewCell {
 
     @IBOutlet weak var titleLabel: UILabel!
 }

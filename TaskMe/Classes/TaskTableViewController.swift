@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class TaskTableViewController: TMTableViewController, TMTableView {
+class TaskTableViewController: TMTableViewController, TMTableViewControllerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,6 +18,7 @@ class TaskTableViewController: TMTableViewController, TMTableView {
         // set the object type
         self.objectType = ObjectType.task
 
+        // show the correct sort options
         switch self.project!.task_sort_type {
         case ObjectAttribute.deadline.rawValue:
             sortTasksSegmentedControl.selectedSegmentIndex = 1
@@ -26,12 +27,17 @@ class TaskTableViewController: TMTableViewController, TMTableView {
         }
     }
 
+    deinit {
+        self.project = nil
+    }
+
     // MARK: - Custom properties
 
     @IBOutlet weak var sortTasksSegmentedControl: UISegmentedControl!
 
     var objectList: Results<Task>?
 
+    // the project owner for this task
     var project: Project? {
         didSet {
             // Update the view.
@@ -41,6 +47,7 @@ class TaskTableViewController: TMTableViewController, TMTableView {
 
     // MARK: - Custom methods
 
+    // The user clicked the Tasks Sort Control - change the sort type
     @IBAction func sortTypeChanged(sender:UISegmentedControl)
     {
         var sortType:String!
@@ -55,6 +62,7 @@ class TaskTableViewController: TMTableViewController, TMTableView {
             break;
         }
 
+        // save the sort type to disk
         if let object = project {
 
             if sortType != object.task_sort_type {
@@ -66,6 +74,7 @@ class TaskTableViewController: TMTableViewController, TMTableView {
         }
     }
 
+    // sort the tasks by their Title or Deadline
     func sortObjects(by type:String) {
 
         self.objectList = self.objectList?.sorted(byProperty: type)
@@ -76,10 +85,11 @@ class TaskTableViewController: TMTableViewController, TMTableView {
     // MARK: - Protocol implementation
 
     func getObjects() {
-        // Update the user interface for the detail item.
 
+        // get all tasks in the parent project
         self.objectList = Storage.shared.objects(Task.self)?.filter("\(ObjectAttribute.project_id.rawValue) == '\(self.project!.id)'").sorted(byProperty: self.project!.task_sort_type)
 
+        // listen for changes
         self.startNotifications(objectList: self.objectList!)
     }
 
@@ -93,6 +103,27 @@ class TaskTableViewController: TMTableViewController, TMTableView {
         return self.objectList?.count ?? 0
     }
 
+    func deleteObject(_: UIAlertAction!) {
+
+        if let task = targetObject as? Task {
+
+            // Server - delete task
+            Server.deleteTask(project_id: task.project_id, id: task.id, onSuccess: { [weak self] in
+
+                // remove object
+                self?.targetObject = nil
+
+            })
+        }
+    }
+
+    // get the title for this task
+    func getTitle(for object: Object) -> String {
+
+        return object.value(forKey: ObjectAttribute.title.rawValue) as! String!
+    }
+
+    // setup the cell view
     func configureCell(_ cell: UITableViewCell, withObject object: Object) {
 
         if let task = object as? Task {
@@ -103,46 +134,29 @@ class TaskTableViewController: TMTableViewController, TMTableView {
             taskCell.deadlineLabel!.text = (task.deadline as Date).toString(format: "yyyy/MM/dd")
             taskCell.completedSwitch!.isOn = task.completed
 
+            // set a reference to this task
             taskCell.task = task
         }
     }
 
-    func showDetailView(mode: String)
-    {
-        self.showDetailView(mode: mode, object:nil)
+    // User wants to Add / Edit a task - show the detail view
+    func createDetailView() -> TMDetailViewController {
+
+        let detailView = self.storyboard?.instantiateViewController(withIdentifier: "TaskDetail") as! TMDetailViewController
+
+        // set a reference to the parent project
+        (detailView as! TaskDetailViewController).project = self.project
+
+        return detailView
     }
 
-    func showDetailView(mode: String, object: Object? = nil)
-    {
-        let modalViewController: TaskDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "TaskDetail") as! TaskDetailViewController
+    func onNetworkError() {
 
-        // we have to set mode this way to prevent compiler error : segmentation error 11
-        modalViewController.viewMode = DetailViewController.ViewMode(rawValue: mode)!
-        modalViewController.objectType = .task
-        modalViewController.targetObject = object
-
-        modalViewController.project = self.project
-
-        let navigationController = UINavigationController(rootViewController: modalViewController)
-        navigationController.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
-
-        let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
-
-        // hide menu for iPad
-        if (UIDevice.current.userInterfaceIdiom == .pad) {
-            appDelegate.splitViewController.preferredDisplayMode = .primaryHidden
-
-        }
-
-        // Choose view based on iPhone or iPad
-        appDelegate.getTopViewController().present(navigationController, animated: true, completion: {
-
-            modalViewController.showDoneButton()
-            
-        })
+        // go back to Projects
+        self.navigationController?.popViewController(animated: true)
     }
 
-    // MARK: - Class overrides
+    // MARK: - TMTableViewController methods
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 

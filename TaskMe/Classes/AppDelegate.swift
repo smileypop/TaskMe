@@ -11,6 +11,8 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
 
+    // MARK: - AppDelegate properties
+
     var window: UIWindow?
 
     lazy var splitViewController:UISplitViewController = {
@@ -23,24 +25,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     lazy var navigationController:UINavigationController = {
 
-        let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
-
-        return appDelegate.splitViewController.viewControllers[appDelegate.splitViewController.viewControllers.count-1] as! UINavigationController
+        return self.splitViewController.viewControllers[self.splitViewController.viewControllers.count-1] as! UINavigationController
         
     }()
 
-    func getTopViewController() -> UIViewController {
+    lazy var topViewController: UIViewController = {
 
         return self.navigationController.topViewController!
-    }
+
+    }()
+
+    // MARK: - UIApplicationDelegate methods
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
         // Override point for customization after application launch.
 
+        // set split view controller delegate
         self.splitViewController.delegate = self
 
-        // show all views for iPad
+        // show all split views for iPad
         if (UIDevice.current.userInterfaceIdiom == .pad) {
             self.splitViewController.preferredDisplayMode = .allVisible
         }
@@ -71,16 +75,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // Saves changes in the application's managed object context before the application terminates.
     }
 
-    // MARK: - Split view
+    // MARK: - UISplitViewControllerDelegate methods
 
-    func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController:UIViewController!, onto primaryViewController:UIViewController!) -> Bool {
+    func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController:UIViewController, onto primaryViewController:UIViewController) -> Bool {
         if let secondaryAsNavController = secondaryViewController as? UINavigationController {
             if let topAsDetailController = secondaryAsNavController.topViewController as? EmptyViewController {
-                //if topAsDetailController.targetObject == nil {
                     // Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
                     //If we don't do this, detail1 will open as the first view when run on iPhone, comment and see
                     return true
-                //}
             }
         }
         return false
