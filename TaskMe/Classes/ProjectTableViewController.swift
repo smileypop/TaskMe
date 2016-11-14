@@ -16,7 +16,7 @@ class ProjectTableViewController : TMTableViewController, TMTableViewControllerD
         // Do any additional setup after loading the view, typically from a nib.
 
         // set the object type
-        self.objectType = ObjectType.project
+        self.objectType = CustomObject.Entity.project
 
         // get a list of all projects
         self.getObjects()
@@ -106,7 +106,7 @@ class ProjectTableViewController : TMTableViewController, TMTableViewControllerD
     // return the name of the project
     func getTitle(for object: Object) -> String {
 
-        return object.value(forKey: ObjectAttribute.name.rawValue) as! String!
+        return object.value(forKey: CustomObject.Attribute.name.rawValue) as! String!
     }
 
     func configureCell(_ cell: UITableViewCell, withObject object: Object) {

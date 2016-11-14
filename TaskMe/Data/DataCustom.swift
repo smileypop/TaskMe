@@ -13,26 +13,40 @@ import RealmSwift
 
 // MARK: - Enums
 
-// Object Types
-enum ObjectType: String {
-    case project = "Project"
-    case task = "Task"
+//// Object Types
+//enum ObjectType: String {
+//    case project = "Project"
+//    case task = "Task"
+//
+//    enum OtherStuff {
+//        case one
+//        case two
+//    }
+//}
+
+enum CustomObject {
+
+    // Realm Object types
+    enum Entity: String {
+        case project = "Project"
+        case task = "Task"
+    }
+
+    // Attributes
+    enum Attribute: String {
+        case id
+        case project_id
+        case name
+        case title
+        case deadline
+        case tasks
+        case completed
+        case task_sort_type
+    }
 }
 
-// Object Attributes
-enum ObjectAttribute: String {
-    case id
-    case project_id
-    case name
-    case title
-    case deadline
-    case tasks
-    case completed
-    case task_sort_type
-}
-
-// Object Path on server
-enum ObjectPath {
+// Path on server
+enum NetworkPath {
     static let server = "http://localhost:8090"
     static let projects = "/projects"
     static let tasks = "/tasks"
@@ -86,7 +100,7 @@ class Server {
     static func getProjects(onSuccess: (()->Void)? = nil) {
 
         // GET http://localhost:8090/projects
-        Network.request(with: .GET, from: [ObjectPath.server, ObjectPath.projects], onSuccess: { (json: JSON) -> Void in
+        Network.request(with: .GET, from: [NetworkPath.server, NetworkPath.projects], onSuccess: { (json: JSON) -> Void in
 
             Factory.addObjects(json: json, callback: onSuccess)
 
@@ -98,14 +112,14 @@ class Server {
     static func getProject(id: String, onSuccess: @escaping ()->Void) {
 
         // GET http://localhost:8090/projects/6
-        Network.request(with: .GET, from: [ObjectPath.server, ObjectPath.projects, "/\(id)"])
+        Network.request(with: .GET, from: [NetworkPath.server, NetworkPath.projects, "/\(id)"])
     }
 
     // create a new project by name
     static func postProject(name: String, onSuccess: (()->Void)? = nil) {
 
         // POST http://localhost:8090/projects?name=HiNative
-        Network.request(with: .POST, from: [ObjectPath.server, ObjectPath.projects, "?name=\(name)"], onSuccess: { (json: JSON) -> Void in
+        Network.request(with: .POST, from: [NetworkPath.server, NetworkPath.projects, "?name=\(name)"], onSuccess: { (json: JSON) -> Void in
 
             Factory.addProject(json: json, callback: onSuccess)
             
@@ -116,7 +130,7 @@ class Server {
     static func patchProject(id: String, name: String, onSuccess: (()->Void)? = nil) {
 
         // PATCH http://localhost:8090/projects/6?name=NewName
-        Network.request(with: .PATCH, from: [ObjectPath.server, ObjectPath.projects, "/\(id)?name=\(name)"], onSuccess: { (json: JSON) -> Void in
+        Network.request(with: .PATCH, from: [NetworkPath.server, NetworkPath.projects, "/\(id)?name=\(name)"], onSuccess: { (json: JSON) -> Void in
 
             Factory.updateProject(id: id, json: json, callback: onSuccess)
 
@@ -127,7 +141,7 @@ class Server {
     static func deleteProject(id: String, onSuccess: (()->Void)? = nil) {
 
         // DELETE http://localhost:8090/projects/6
-        Network.request(with: .DELETE, from: [ObjectPath.server, ObjectPath.projects, "/\(id)"], onSuccess: { (json: JSON) -> Void in
+        Network.request(with: .DELETE, from: [NetworkPath.server, NetworkPath.projects, "/\(id)"], onSuccess: { (json: JSON) -> Void in
 
             Factory.deleteProject(id: id, callback: onSuccess)
             
@@ -140,14 +154,14 @@ class Server {
     static func getTask(project_id:String, id: String) {
 
         // GET http://localhost:8090/projects/1/tasks/1
-        Network.request(with: .GET, from: [ObjectPath.server, ObjectPath.projects, "/\(project_id)", ObjectPath.tasks, "/\(id)"])
+        Network.request(with: .GET, from: [NetworkPath.server, NetworkPath.projects, "/\(project_id)", NetworkPath.tasks, "/\(id)"])
     }
 
     // create a new task by title
     static func postTask(project_id:String, title: String, deadline: Int, onSuccess: (()->Void)? = nil) {
 
         // POST http://localhost:8090/projects/6/tasks?title=task&deadline=16284&completed=false
-        Network.request(with: .POST, from: [ObjectPath.server, ObjectPath.projects, "/\(project_id)", ObjectPath.tasks, "?title=\(title)&deadline=\(deadline)"], onSuccess: { (json: JSON) -> Void in
+        Network.request(with: .POST, from: [NetworkPath.server, NetworkPath.projects, "/\(project_id)", NetworkPath.tasks, "?title=\(title)&deadline=\(deadline)"], onSuccess: { (json: JSON) -> Void in
 
             Factory.addTask(json: json, callback: onSuccess)
 
@@ -158,7 +172,7 @@ class Server {
     static func patchTask(project_id:String, id: String, title: String, deadline: Int, onSuccess: (()->Void)? = nil) {
 
         // PATCH http://localhost:8090/projects/6/tasks/2?title=changed&deadline=21196
-        Network.request(with: .PATCH, from: [ObjectPath.server, ObjectPath.projects, "/\(project_id)", ObjectPath.tasks, "/\(id)?title=\(title)&deadline=\(deadline)" ], onSuccess: { (json: JSON) -> Void in
+        Network.request(with: .PATCH, from: [NetworkPath.server, NetworkPath.projects, "/\(project_id)", NetworkPath.tasks, "/\(id)?title=\(title)&deadline=\(deadline)" ], onSuccess: { (json: JSON) -> Void in
 
             Factory.updateTask(id: id, json: json, callback: onSuccess)
             
@@ -169,7 +183,7 @@ class Server {
     static func patchTask(project_id:String, id: String, completed:Bool, onSuccess: (()->Void)? = nil) {
 
         // PATCH http://localhost:8090/projects/6/tasks/2?completed=false
-        Network.request(with: .PATCH, from: [ObjectPath.server, ObjectPath.projects, "/\(project_id)", ObjectPath.tasks, "/\(id)?completed=\(completed)" ], onSuccess: { (json: JSON) -> Void in
+        Network.request(with: .PATCH, from: [NetworkPath.server, NetworkPath.projects, "/\(project_id)", NetworkPath.tasks, "/\(id)?completed=\(completed)" ], onSuccess: { (json: JSON) -> Void in
 
             Factory.updateTask(id: id, json: json, callback: onSuccess)
 
@@ -180,7 +194,7 @@ class Server {
     static func deleteTask(project_id:String, id: String, onSuccess: (()->Void)? = nil) {
 
         // DELETE http://localhost:8090/projects/6/tasks/2
-        Network.request(with: .DELETE, from: [ObjectPath.server, ObjectPath.projects, "/\(id)", ObjectPath.tasks, "/\(id)"], onSuccess: { (json: JSON) -> Void in
+        Network.request(with: .DELETE, from: [NetworkPath.server, NetworkPath.projects, "/\(id)", NetworkPath.tasks, "/\(id)"], onSuccess: { (json: JSON) -> Void in
 
             Factory.deleteTask(id: id, callback: onSuccess)
 
@@ -208,7 +222,7 @@ class Factory {
 
                 projects.append(project)
 
-                if let tasksJson:JSON = projectJson[ObjectAttribute.tasks.rawValue] {
+                if let tasksJson:JSON = projectJson[CustomObject.Attribute.tasks.rawValue] {
 
                     // loop through tasks
                     for (_, taskJson):(String, JSON) in tasksJson {
@@ -235,8 +249,8 @@ class Factory {
 
         let project = Project()
 
-        project.id = json[ObjectAttribute.id.rawValue].string ?? "0"
-        project.name = json[ObjectAttribute.name.rawValue].string?.removingPercentEncoding ?? ""
+        project.id = json[CustomObject.Attribute.id.rawValue].string ?? "0"
+        project.name = json[CustomObject.Attribute.name.rawValue].string?.removingPercentEncoding ?? ""
 
         return project
         
@@ -255,7 +269,7 @@ class Factory {
     static func updateProject(id: String, json:JSON, callback:(()->Void)? = nil) {
 
         Storage.shared.update(Project.self, id, [
-            ObjectAttribute.name.rawValue : json[ObjectAttribute.name.rawValue].string?.removingPercentEncoding ?? ""
+            CustomObject.Attribute.name.rawValue : json[CustomObject.Attribute.name.rawValue].string?.removingPercentEncoding ?? ""
             ], callback)
 
     }
@@ -273,12 +287,12 @@ class Factory {
 
         let task = Task()
 
-        task.id = json[ObjectAttribute.id.rawValue].string ?? "0"
-        task.project_id = json[ObjectAttribute.project_id.rawValue].string ?? "0"
-        task.title = json[ObjectAttribute.title.rawValue].string?.removingPercentEncoding ?? ""
-        task.completed = json[ObjectAttribute.completed.rawValue].bool ?? false
+        task.id = json[CustomObject.Attribute.id.rawValue].string ?? "0"
+        task.project_id = json[CustomObject.Attribute.project_id.rawValue].string ?? "0"
+        task.title = json[CustomObject.Attribute.title.rawValue].string?.removingPercentEncoding ?? ""
+        task.completed = json[CustomObject.Attribute.completed.rawValue].bool ?? false
 
-        if let deadline = json[ObjectAttribute.deadline.rawValue].int {
+        if let deadline = json[CustomObject.Attribute.deadline.rawValue].int {
 
             task.deadline = NSDate(timeIntervalSince1970: Double(deadline))
 
@@ -293,7 +307,7 @@ class Factory {
 
         let task = createTask(json: json)
 
-        Storage.shared.append(task, Project.self, task.project_id, ObjectAttribute.tasks.rawValue, callback)
+        Storage.shared.append(task, Project.self, task.project_id, CustomObject.Attribute.tasks.rawValue, callback)
 
     }
 
@@ -302,16 +316,16 @@ class Factory {
 
         var values = [String: Any]()
 
-        if let title = json[ObjectAttribute.title.rawValue].string?.removingPercentEncoding {
-            values[ObjectAttribute.title.rawValue] = title
+        if let title = json[CustomObject.Attribute.title.rawValue].string?.removingPercentEncoding {
+            values[CustomObject.Attribute.title.rawValue] = title
         }
 
-        if let completed = json[ObjectAttribute.completed.rawValue].bool {
-            values[ObjectAttribute.completed.rawValue] = completed
+        if let completed = json[CustomObject.Attribute.completed.rawValue].bool {
+            values[CustomObject.Attribute.completed.rawValue] = completed
         }
 
-        if let deadline = json[ObjectAttribute.deadline.rawValue].int {
-            values[ObjectAttribute.deadline.rawValue] = NSDate(timeIntervalSince1970: Double(deadline))
+        if let deadline = json[CustomObject.Attribute.deadline.rawValue].int {
+            values[CustomObject.Attribute.deadline.rawValue] = NSDate(timeIntervalSince1970: Double(deadline))
         }
 
         Storage.shared.update(Task.self, id, values, callback)

@@ -16,11 +16,11 @@ class TaskTableViewController: TMTableViewController, TMTableViewControllerDeleg
         // Do any additional setup after loading the view, typically from a nib.
 
         // set the object type
-        self.objectType = ObjectType.task
+        self.objectType = CustomObject.Entity.task
 
         // show the correct sort options
         switch self.project!.task_sort_type {
-        case ObjectAttribute.deadline.rawValue:
+        case CustomObject.Attribute.deadline.rawValue:
             sortTasksSegmentedControl.selectedSegmentIndex = 1
         default:
             sortTasksSegmentedControl.selectedSegmentIndex = 0
@@ -55,9 +55,9 @@ class TaskTableViewController: TMTableViewController, TMTableViewControllerDeleg
         switch sender.selectedSegmentIndex
         {
         case 0:
-            sortType = ObjectAttribute.title.rawValue
+            sortType = CustomObject.Attribute.title.rawValue
         case 1:
-            sortType = ObjectAttribute.deadline.rawValue
+            sortType = CustomObject.Attribute.deadline.rawValue
         default:
             break;
         }
@@ -67,7 +67,7 @@ class TaskTableViewController: TMTableViewController, TMTableViewControllerDeleg
 
             if sortType != object.task_sort_type {
 
-                Storage.shared.update(Project.self, object.id, [ObjectAttribute.task_sort_type.rawValue : sortType])
+                Storage.shared.update(Project.self, object.id, [CustomObject.Attribute.task_sort_type.rawValue : sortType])
 
                 sortObjects(by: sortType)
             }
@@ -87,7 +87,7 @@ class TaskTableViewController: TMTableViewController, TMTableViewControllerDeleg
     func getObjects() {
 
         // get all tasks in the parent project
-        self.objectList = Storage.shared.objects(Task.self)?.filter("\(ObjectAttribute.project_id.rawValue) == '\(self.project!.id)'").sorted(byProperty: self.project!.task_sort_type)
+        self.objectList = Storage.shared.objects(Task.self)?.filter("\(CustomObject.Attribute.project_id.rawValue) == '\(self.project!.id)'").sorted(byProperty: self.project!.task_sort_type)
 
         // listen for changes
         self.startNotifications(objectList: self.objectList!)
@@ -120,7 +120,7 @@ class TaskTableViewController: TMTableViewController, TMTableViewControllerDeleg
     // get the title for this task
     func getTitle(for object: Object) -> String {
 
-        return object.value(forKey: ObjectAttribute.title.rawValue) as! String!
+        return object.value(forKey: CustomObject.Attribute.title.rawValue) as! String!
     }
 
     // setup the cell view

@@ -41,7 +41,7 @@ class TMTableViewController: UITableViewController  {
 
     var delegate:TMTableViewControllerDelegate!    // delegate
     var notificationToken: NotificationToken? = nil     // listener for object changes
-    var objectType:ObjectType!                          // the type of objects listed in this table
+    var objectType:CustomObject.Entity!                          // the type of objects listed in this table
     var targetObject: Object? = nil                     // the object user has selected for "edit / delete"
 
     // MARK: - Controller methods

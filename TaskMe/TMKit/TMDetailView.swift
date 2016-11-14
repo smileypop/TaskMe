@@ -39,7 +39,7 @@ class TMDetailViewController : UIViewController, UITextFieldDelegate {
     var parentTableView:TMTableViewController!
     var targetObject: Object?
     var viewMode:ViewMode!
-    var objectType:ObjectType!
+    var objectType:CustomObject.Entity!
 
     lazy var objectName: String = { [weak self] in
         (self?.nameTextField.text!.isEmpty)! ? "My " + (self?.objectType.rawValue)!  : (self?.nameTextField.text!)!
@@ -96,6 +96,8 @@ class TMDetailViewController : UIViewController, UITextFieldDelegate {
     // User pressed Done button
     func onDone(_ sender: Any) {
 
+        UIHelper.showActivityIndicator(in: self.view)
+
         switch(self.viewMode!) {
         case .add:
             self.detailViewDelegate.addObject()
@@ -115,6 +117,8 @@ class TMDetailViewController : UIViewController, UITextFieldDelegate {
     func dismissSelf() {
         
         self.dismiss(animated: true, completion: { [weak self] in
+
+            UIHelper.hideActivityIndicator()
 
             self?.parentTableView.setUserInteraction(enabled: true)
 
