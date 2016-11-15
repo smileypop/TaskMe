@@ -27,10 +27,6 @@ class TaskTableViewController: TMTableViewController, TMTableViewControllerDeleg
         }
     }
 
-    deinit {
-        self.project = nil
-    }
-
     // MARK: - Custom properties
 
     @IBOutlet weak var sortTasksSegmentedControl: UISegmentedControl!
@@ -40,8 +36,10 @@ class TaskTableViewController: TMTableViewController, TMTableViewControllerDeleg
     // the project owner for this task
     var project: Project? {
         didSet {
-            // Update the view.
-            self.getObjects()
+            if (project != nil) {
+                // Update the view.
+                self.getObjects()
+            }
         }
     }
 
@@ -157,6 +155,13 @@ class TaskTableViewController: TMTableViewController, TMTableViewControllerDeleg
     }
 
     // MARK: - TMTableViewController methods
+
+    override func cleanup() {
+        super.cleanup()
+
+        self.objectList = nil
+        self.project = nil
+    }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 

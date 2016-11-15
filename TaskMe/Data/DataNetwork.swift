@@ -11,13 +11,14 @@ import UIKit
 
 class Network {
 
+    enum ResponseNotification: String {
+        case error = "NetworkResponseError"
+    }
+
     enum HTTPMethod:String {
         case GET, POST, PATCH, DELETE
 
     }
-
-    // Keep a lister of Error listeners
-    static var errorActions = [()->Void]()
 
     // Create a URL path
     static func getPath(from params:[String]) -> String {
@@ -52,24 +53,10 @@ class Network {
                 // ERROR
                 print(error!)
 
-                // create an alert
-                let alertController = UIAlertController(title: "ERROR", message: "Please turn on the server and try again.", preferredStyle: UIAlertControllerStyle.alert)
+                UIHelper.showNetworkErrorAlert( with: {
 
-                let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
-
-                    // execute error actions
-                    for action in self.errorActions {
-
-                        action()
-                    }
-                }
-
-                alertController.addAction(okAction)
-
-                // show the alert
-                if let rootVC = UIApplication.shared.keyWindow?.rootViewController {
-                    rootVC.present(alertController, animated: true)
-                }
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: ResponseNotification.error.rawValue), object: nil)
+                })
 
                 return
             }

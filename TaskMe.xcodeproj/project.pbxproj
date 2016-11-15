@@ -145,6 +145,7 @@
 			children = (
 				935550ED1DC1CA8A00423037 /* AppDelegate.swift */,
 				9348F7081DCB0B7F00411453 /* Custom.swift */,
+				934BC49E1DD9AADA00183197 /* UIHelper.swift */,
 				93D7E6D71DC70F6B008BAEF8 /* ProjectTableViewController.swift */,
 				935550EE1DC1CA8A00423037 /* ProjectTableViewCell.swift */,
 				935550F91DC308C300423037 /* ProjectDetailViewController.swift */,
@@ -152,7 +153,6 @@
 				935550F71DC1CB7F00423037 /* TaskTableViewCell.swift */,
 				935550F01DC1CA8A00423037 /* TaskDetailViewController.swift */,
 				93EE04331DD00B2D006623BE /* EmptyViewController.swift */,
-				934BC49E1DD9AADA00183197 /* UIHelper.swift */,
 			);
 			name = Classes;
 			path = TaskMe/Classes;

@@ -31,6 +31,9 @@ class ProjectTableViewController : TMTableViewController, TMTableViewControllerD
     // called if there is a Network error
     func refreshObjects() {
 
+        // remove notification
+        notificationToken = nil
+
         // remeve all Realm objects
         Storage.shared.deleteAll( {
 
@@ -166,8 +169,7 @@ class ProjectTableViewController : TMTableViewController, TMTableViewControllerD
                 // set the project owner of the task
                 if let object = getObject(atIndex: indexPath.row) as? Project {
                     
-                    destination.project = object
-                    
+                    destination.project = object                    
                 }
             }
         }

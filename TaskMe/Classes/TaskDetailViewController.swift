@@ -17,12 +17,6 @@ class TaskDetailViewController: TMDetailViewController, TMDetailViewDelegate {
 
     var project:Project!
 
-    // MARK: - Custom methods
-
-    deinit {
-        project = nil
-    }
-
     // MARK: - TMDetailView protocol
 
     func setup() {
@@ -42,6 +36,13 @@ class TaskDetailViewController: TMDetailViewController, TMDetailViewDelegate {
             self.deadlineDatePicker.minimumDate = Date()
         }
 
+    }
+
+    override func cleanup() {
+
+        super.cleanup()
+
+        self.project = nil
     }
 
     func addObject() {

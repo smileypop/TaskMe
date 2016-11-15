@@ -10,44 +10,38 @@ import UIKit
 
 class UIHelper {
 
-    static var activityOverlay: UIView?
-    static var activityIndicator: UIActivityIndicatorView?
+    enum UserInteractionNotification: String {
+        case enabled = "UIHelperUserInteractionEnabledNotification"
+        case disabled = "UIHelperUserInteractionDisabledNotification"
+    }
 
-    static func showActivityIndicator(in overlayParent: UIView) {
+    // show an alert if there is a network error
+    static func showNetworkErrorAlert(with action: (()->Void)?) {
 
-        // prevent duplicate overlays
-        if (activityOverlay == nil) {
+        DispatchQueue.main.async {
 
-            activityOverlay = UIView(frame: overlayParent.frame)
+            // create an alert
+            let alertController = UIAlertController(title: "ERROR", message: "Please turn on the server and try again.", preferredStyle: UIAlertControllerStyle.alert)
 
-            activityOverlay?.center = overlayParent.center
-            activityOverlay?.alpha = 0
-            activityOverlay?.backgroundColor = UIColor.black
+            let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
 
-            overlayParent.addSubview(activityOverlay!)
-            overlayParent.bringSubview(toFront: activityOverlay!)
+                // do  action
+                action?()
+            }
 
-            UIView.beginAnimations(nil, context: nil)
-            UIView.setAnimationDuration(0.5)
-            activityOverlay?.alpha = activityOverlay!.alpha > 0 ? 0 : 0.5
-            UIView.commitAnimations()
+            alertController.addAction(okAction)
 
-            activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.white)
-            activityIndicator?.center = activityOverlay!.center
-
-            activityIndicator?.startAnimating()
-
-            activityOverlay?.addSubview(activityIndicator!)
+            // show the alert
+            if let rootVC = UIApplication.shared.keyWindow?.rootViewController {
+                rootVC.present(alertController, animated: true)
+            }
         }
     }
 
-    static func hideActivityIndicator() {
+    // Notify the app if user interaction has changed
+    static func setUserInteraction(_ userInteraction: UserInteractionNotification) {
 
-        activityIndicator?.stopAnimating()
-        activityIndicator = nil
-        
-        activityOverlay?.removeFromSuperview()
-        activityOverlay = nil
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: userInteraction.rawValue), object: nil)
     }
-    
+
 }

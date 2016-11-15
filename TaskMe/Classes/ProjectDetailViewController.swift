@@ -22,6 +22,13 @@ class ProjectDetailViewController : TMDetailViewController, TMDetailViewDelegate
 
     }
 
+    override func cleanup() {
+
+        super.cleanup()
+        
+        // add custom code
+    }
+
     func addObject() {
 
         // Server - add a new project

@@ -39,10 +39,12 @@ class TMTableViewController: UITableViewController  {
 
     // MARK: - Properties
 
-    var delegate:TMTableViewControllerDelegate!    // delegate
-    var notificationToken: NotificationToken? = nil     // listener for object changes
-    var objectType:CustomObject.Entity!                          // the type of objects listed in this table
-    var targetObject: Object? = nil                     // the object user has selected for "edit / delete"
+    var delegate:TMTableViewControllerDelegate!                 // delegate
+    var notificationToken: NotificationToken? = nil             // listener for object changes
+    var objectType:CustomObject.Entity!                         // the type of objects listed in this table
+    var targetObject: Object? = nil                             // the object user has selected for "edit / delete"
+    private var networkErrorObserver: NSObjectProtocol!         // network error listener
+    private var userInteractionObserver: NSObjectProtocol!      // user interaction listener
 
     // MARK: - Controller methods
 
@@ -56,7 +58,18 @@ class TMTableViewController: UITableViewController  {
         self.delegate = self as! TMTableViewControllerDelegate
 
         // add error listener
-        Network.errorActions.append(self.delegate.onNetworkError)
+        networkErrorObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: Network.ResponseNotification.error.rawValue),
+                                                                         object: nil,
+                                                                         queue: OperationQueue.main) { [weak self] notification in
+                                                                            self?.delegate?.onNetworkError()
+        }
+
+        // add user interaction listener
+        userInteractionObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: UIHelper.UserInteractionNotification.enabled.rawValue),
+                                                                         object: nil,
+                                                                         queue: OperationQueue.main) { [weak self] notification in
+                                                                            self?.setUserInteraction(enabled: true)
+        }
 
         // set up navigation items
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(onAddButtonPress(_:)))
@@ -64,7 +77,27 @@ class TMTableViewController: UITableViewController  {
         self.navigationItem.rightBarButtonItems = [addButton, self.editButtonItem]
     }
 
-    deinit {
+    override func willMove(toParentViewController parent: UIViewController?) {
+        super.willMove(toParentViewController: parent)
+
+        if parent == nil {
+
+            cleanup()
+        }
+    }
+
+    func cleanup() {
+
+        // clear listeners
+        if self.networkErrorObserver != nil {
+            NotificationCenter.default.removeObserver(networkErrorObserver)
+            self.networkErrorObserver = nil
+        }
+
+        if self.userInteractionObserver != nil {
+            NotificationCenter.default.removeObserver(userInteractionObserver)
+            self.userInteractionObserver = nil
+        }
 
         // stop listening for changes
         self.notificationToken?.stop()
@@ -91,11 +124,15 @@ class TMTableViewController: UITableViewController  {
     // Enable / Disable menu when a Detail view is showing
     func setUserInteraction(enabled: Bool) {
 
-        self.view.isUserInteractionEnabled = enabled
-        self.view.alpha = enabled ? 1.0 : 0.5
+        // check the window hierarchy
+        if self.view.window != nil {
 
-        self.navigationController?.navigationBar.isUserInteractionEnabled = enabled;
-        self.navigationController?.navigationBar.alpha = enabled ? 1.0 : 0.5
+            self.view.isUserInteractionEnabled = enabled
+            self.view.alpha = enabled ? 1.0 : 0.5
+
+            self.navigationController?.navigationBar.isUserInteractionEnabled = enabled;
+            self.navigationController?.navigationBar.alpha = enabled ? 1.0 : 0.5
+        }
     }
 
     // User has chosen to add or edit an object - show a detail view
@@ -104,9 +141,6 @@ class TMTableViewController: UITableViewController  {
 
         // create the correct detail view
         let modalViewController = self.delegate.createDetailView()
-
-        // set a reference to this table
-        modalViewController.parentTableView = self
 
         // we have to set mode this way to prevent compiler error : segmentation error 11
         modalViewController.viewMode = TMDetailViewController.ViewMode(rawValue: mode)!
@@ -120,13 +154,25 @@ class TMTableViewController: UITableViewController  {
         // disable the table menu
         self.setUserInteraction(enabled: false)
 
-        // present the detail view
-        let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
-        appDelegate.topViewController.present(navigationController, animated: true, completion: {
+        let onCompleteAction = {
 
             // show the done button after the view is ready
             modalViewController.showDoneButton()
-        })
+        }
+
+        // on iPad - pop over empty view
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+
+            // present the detail view
+            let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
+            appDelegate.topViewController.present(navigationController, animated: true, completion: onCompleteAction)
+
+        } else {
+
+            // pop over current view
+            self.present(navigationController, animated: true, completion: onCompleteAction)
+        }
+
     }
 
     // User wants to add an object
@@ -186,7 +232,8 @@ class TMTableViewController: UITableViewController  {
 
     // Hide the "Edit / Delete" menu
     func stopEditing() {
-        self.tableView.setEditing(false, animated: true)
+
+        self.setEditing(false, animated: true)
     }
 
     // MARK: - Table View protocol methods
@@ -223,8 +270,6 @@ class TMTableViewController: UITableViewController  {
 
             // ask for confirmation before deleting
             self?.askToDeleteObject(at: indexPath)
-
-            self?.stopEditing()
         }
 
         // User tapped Edit
@@ -233,9 +278,6 @@ class TMTableViewController: UITableViewController  {
 
             // show the Edit detail veiew
             self?.updateObject(atIndexPath: indexPath)
-
-            // stop editing the table row
-            self?.stopEditing()
         }
 
         // set a blue background for the Edit button
@@ -254,7 +296,11 @@ class TMTableViewController: UITableViewController  {
     // User wants to start / stop editing
     override func setEditing(_ editing: Bool, animated: Bool) {
 
+        // tell super
         super.setEditing(editing, animated: animated)
+
+        // tell tableview
+        self.tableView.setEditing(editing, animated: animated)
 
         // add custom code
         if (editing) {

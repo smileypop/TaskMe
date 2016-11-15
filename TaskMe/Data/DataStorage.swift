@@ -13,7 +13,7 @@ struct Storage {
 
     // MARK: Realm
 
-     private lazy var defaultRealm: Realm = {
+    private lazy var defaultRealm: Realm = {
 
         do {
             // don't save Realm between app sessions
@@ -31,17 +31,16 @@ struct Storage {
 
     }()
 
-
     // get all Objects of Type
     mutating func objects<T: Object>(_ type: T.Type) -> Results<T>? {
-
+        
         return self.defaultRealm.objects(type)
     }
 
     // add an Object
     mutating func add(_ object: Object, _ onSuccess: (() -> Void)? = nil) {
 
-        self.dispatch( action: { realm in
+        self.dispatch(label: "addObject", action: { realm in
 
             realm.add(object, update: true)
 
@@ -51,22 +50,20 @@ struct Storage {
     // add an array of Objects
     mutating func add(_ objects: [Object], _ onSuccess: (() -> Void)? = nil) {
 
-        autoreleasepool {
+        self.dispatch(label: "addObjects", action: { realm in
 
-            self.dispatch( action: { realm in
+            for object in objects {
 
-                for object in objects {
                     realm.add(object, update: true)
-                }
-                
-            }, onSuccess: onSuccess)
-        }
+            }
+
+        }, onSuccess: onSuccess)
     }
 
     // update an Object
     mutating func update<T: Object>(_ type: T.Type, _ id: String, _ dictionary: [String: Any], _ onSuccess: (() -> Void)? = nil) {
 
-        self.dispatch( action: { realm in
+        self.dispatch(label: "updateObject", action: { realm in
 
             if let object = realm.object(ofType: type, forPrimaryKey: id){
 
@@ -82,7 +79,7 @@ struct Storage {
     // delete an Object
     mutating func delete<T: Object>(_ type: T.Type, _ id: String, _ onSuccess: (() -> Void)? = nil) {
 
-        self.dispatch( action: { realm in
+        self.dispatch(label: "deleteObject", action: { realm in
 
             if let object = realm.object(ofType: type, forPrimaryKey: id){
 
@@ -95,11 +92,9 @@ struct Storage {
     // delete all Objects
     mutating func deleteAll(_ onSuccess: (() -> Void)? = nil) {
 
-        self.dispatch( action: { realm in
+        self.dispatch(label: "deleteAll", action: { realm in
 
-            try! realm.write {
-                realm.deleteAll()
-            }
+            realm.deleteAll()
 
         }, onSuccess: onSuccess)
     }
@@ -107,7 +102,7 @@ struct Storage {
     // add an Object to a List
     mutating func append<T: Object, P: Object>(_ object: T, _ parentType: P.Type, _ parentId: String, _ listName: String, _ onSuccess: (() -> Void)? = nil) {
 
-        self.dispatch( action: { realm in
+        self.dispatch(label: "appendObjectToList", action: { realm in
 
             if let parent = realm.object(ofType: parentType, forPrimaryKey: parentId){
 
@@ -119,31 +114,33 @@ struct Storage {
     }
 
     // dispatch an async block
-    mutating func dispatch(action: @escaping (Realm) -> Void, onSuccess: (() -> Void)? = nil) {
+    mutating func dispatch(label: String, action: @escaping (Realm) -> Void, onSuccess: (() -> Void)? = nil) {
 
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue(label: label, qos: .userInitiated).async {
 
-            let realm = try! Realm(configuration: Realm.Configuration(inMemoryIdentifier: "MyInMemoryRealm"))
+            autoreleasepool {
 
-            realm.beginWrite()
+                let realm = try! Realm(configuration: Realm.Configuration(inMemoryIdentifier: "MyInMemoryRealm"))
 
-            action(realm)
+                do {
 
-            do {
+                    try realm.write {
 
-            try realm.commitWrite()
+                        action(realm)
+                    }
+                    onSuccess?()
 
-                onSuccess?()
+                } catch let error as NSError {
 
-            } catch let error as NSError {
-
-                // handle error
-                let nserror = error as NSError
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                    // handle error
+                    let nserror = error as NSError
+                    fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                }
+                
             }
-
+            
         }
-
+        
     }
 
 }
