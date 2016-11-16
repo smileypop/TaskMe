@@ -42,11 +42,12 @@ class TMDetailViewController : UIViewController, UITextFieldDelegate {
     var targetObject: Object?
     var viewMode:ViewMode!
     var objectType:CustomObject.Entity!
-    private var networkErrorObserver: NSObjectProtocol!         // network error listener
 
-    lazy var objectName: String = { [weak self] in
+    internal lazy var objectName: String = { [weak self] in
         (self?.nameTextField.text!.isEmpty)! ? "My " + (self?.objectType.rawValue)!  : (self?.nameTextField.text!)!
-    }()
+        }()
+
+    internal var networkErrorObserver: NSObjectProtocol!         // network error listener
 
     override func viewDidLoad() {
         super.viewDidLoad()

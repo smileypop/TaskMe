@@ -31,8 +31,6 @@ class TaskTableViewController: TMTableViewController, TMTableViewControllerDeleg
 
     @IBOutlet weak var sortTasksSegmentedControl: UISegmentedControl!
 
-    var objectList: Results<Task>?
-
     // the project owner for this task
     var project: Project? {
         didSet {
@@ -42,6 +40,8 @@ class TaskTableViewController: TMTableViewController, TMTableViewControllerDeleg
             }
         }
     }
+
+    private var objectList: Results<Task>?
 
     // MARK: - Custom methods
 

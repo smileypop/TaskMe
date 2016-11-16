@@ -24,7 +24,7 @@ class ProjectTableViewController : TMTableViewController, TMTableViewControllerD
 
     // MARK: - Custom properties
 
-    var objectList: Results<Project>?
+    private var objectList: Results<Project>?
 
     // MARK: - Custom methods
 

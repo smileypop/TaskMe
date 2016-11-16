@@ -40,9 +40,11 @@ class TMTableViewController: UITableViewController  {
     // MARK: - Properties
 
     var delegate:TMTableViewControllerDelegate!                 // delegate
-    var notificationToken: NotificationToken? = nil             // listener for object changes
-    var objectType:CustomObject.Entity!                         // the type of objects listed in this table
-    var targetObject: Object? = nil                             // the object user has selected for "edit / delete"
+
+    internal var notificationToken: NotificationToken? = nil    // listener for object changes
+    internal var objectType:CustomObject.Entity!                // the type of objects listed in this table
+    internal var targetObject: Object? = nil                    // the object user has selected for "edit / delete"
+
     private var networkErrorObserver: NSObjectProtocol!         // network error listener
     private var userInteractionObserver: NSObjectProtocol!      // user interaction listener
 

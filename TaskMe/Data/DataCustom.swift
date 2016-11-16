@@ -13,17 +13,6 @@ import RealmSwift
 
 // MARK: - Enums
 
-//// Object Types
-//enum ObjectType: String {
-//    case project = "Project"
-//    case task = "Task"
-//
-//    enum OtherStuff {
-//        case one
-//        case two
-//    }
-//}
-
 enum CustomObject {
 
     // Realm Object types
